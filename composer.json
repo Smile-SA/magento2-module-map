@@ -1,0 +1,35 @@
+{
+    "name": "smile/module-map",
+    "type": "magento2-module",
+    "description": "Smile Map Utilities Module",
+    "keywords": ["magento2", "map", "geocoding", "geolocalisation"],
+    "require": {
+        "php": "~5.5.0|~5.6.0|~7.0.0",
+        "magento/framework": "*",
+        "magento/module-store": "*",
+        "willdurand/geocoder": "^3.3"
+    },
+    "license": "OSL-3.0",
+    "authors": [
+        {
+            "name": "Aurélien FOUCRET",
+            "email": "aurelien.foucret@smile.fr"
+        },
+        {
+            "name": "Romain Ruaud",
+            "email": "romain.ruaud@smile.fr"
+        },
+        {
+            "name": "Guillaume Vrac",
+            "email": "guillaume.vrac@smile.fr"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Smile\\Map\\" : ""
+        }
+    }
+}
