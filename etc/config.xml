@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Default Configuration for Localized Retailer
+ * Smile Map Configuration.
  *
  * DISCLAIMER
  *
@@ -9,8 +9,8 @@
  * versions in the future.
  *
  * @category  Smile
- * @package   Smile\Smile_LocalizedRetailer
- * @author    Romain RUAUD <romain.ruaud@smile.fr>
+ * @package   Smile\Map
+ * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
  * @copyright 2016 Smile
  * @license   Apache License Version 2.0
  */
@@ -22,10 +22,39 @@
                 <provider>google</provider>
                 
                 <provider_osm_tile_url>http://{s}.tile.osm.org/{z}/{x}/{y}.png</provider_osm_tile_url>
+                <provider_osm_direction_url_template>http://www.openstreetmap.org/directions?route={{depend origin}}{{var orig.latitude}},{{var orig.longitude}}{{/depend}};{{var dest.latitude}},{{var dest.longitude}}</provider_osm_direction_url_template>
                 
                 <provider_google_api_key>AIzaSyDBeZ4JyDqP4ZTHk2tnUauKEbLgwOHYlC8</provider_google_api_key>
                 <provider_google_type>roadmap</provider_google_type>
+                <provider_google_direction_url_template>https://www.google.com/maps/dir/{{depend origin}}{{var orig.latitude}},{{var orig.longitude}}{{/depend}}/{{var dest.latitude}},{{var dest.longitude}}</provider_google_direction_url_template>
             </map>
+
+            <address_templates>
+                <text>{{if street1}}{{var street1}}
+    {{/if}}
+    {{depend street2}}{{var street2}}{{/depend}}
+    {{depend street3}}{{var street3}}{{/depend}}
+    {{depend street4}}{{var street4}}{{/depend}}
+    {{if city}}{{var city}},  {{/if}}{{if region}}{{var region}}, {{/if}}{{if postcode}}{{var postcode}}{{/if}}
+    {{var country}}</text>
+                <oneline>{{var street}}, {{var city}}, {{var region}} {{var postcode}}, {{var country}}</oneline>
+                <html><![CDATA[{{if street1}}{{var street1}}<br />{{/if}}
+    {{depend street2}}{{var street2}}<br />{{/depend}}
+    {{depend street3}}{{var street3}}<br />{{/depend}}
+    {{depend street4}}{{var street4}}<br />{{/depend}}
+    {{if city}}{{var city}},  {{/if}}{{if region}}{{var region}}, {{/if}}{{if postcode}}{{var postcode}}{{/if}}<br/>
+    {{var country}}<br/>
+    ]]></html>
+                <pdf><![CDATA[{{if street1}}{{var street1}}
+    {{/if}}
+    {{depend street2}}{{var street2}}|{{/depend}}
+    {{depend street3}}{{var street3}}|{{/depend}}
+    {{depend street4}}{{var street4}}|{{/depend}}
+    {{if city}}{{var city}},|{{/if}}
+    {{if region}}{{var region}}, {{/if}}{{if postcode}}{{var postcode}}{{/if}}|
+    {{var country}}|
+    ]]></pdf>
+            </address_templates>
         </smile_map>
     </default>
 </config>
