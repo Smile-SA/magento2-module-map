@@ -16,9 +16,6 @@
 var config = {
     map: {
         '*': {
-            /*
-             * Smile Map wrappers
-             */
             'smile-map'                 : 'Smile_Map/js/map',
             'smile-map-provider-osm'    : 'Smile_Map/js/map-provider/osm',
             'smile-map-provider-google' : 'Smile_Map/js/map-provider/google-maps'
