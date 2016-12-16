@@ -79,13 +79,16 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
         $urlTemplate = $this->config['direction_url_template'];
 
         $data = new \Magento\Framework\DataObject();
-        $data->setDest(['latitude' => $dest->getLatitude(), 'longitude' => $dest->getLongitude()]);
+
+        $data->setDestLatitude($dest->getLatitude());
+        $data->setDestLongitude($dest->getLongitude());
 
         if ($orig !== null) {
-            $data->setOrig(['latitude' => $orig->getLatitude(), 'longitude' => $orig->getLongitude()]);
+            $data->setHasOrigin(true);
+            $data->setOrigLatitude($orig->getLatitude());
+            $data->setOrigLongitude($orig->getLongitude());
         }
-        // @todo
-        //return $this->filterManager->template($urlTemplate, ['variables' => $data->toArray()]);
-        return '';
+
+        return $this->filterManager->template($urlTemplate, ['variables' => $data->toArray()]);
     }
 }
