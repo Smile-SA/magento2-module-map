@@ -44,7 +44,9 @@ define([
             } else {
                 var geocodingOptions = {'bounds' : this.initialBounds};
                 this.geocoder.geocode(this.fulltextSearch(), geocodingOptions, function(results) {
-                    this.map.fitBounds(results[0].bounds);
+                    if (results.length > 0) {
+                        this.map.fitBounds(results[0].bounds);
+                    }
                 }.bind(this));
             }
 
