@@ -6,34 +6,37 @@ define([
     'leaflet-geosearch-google',
 ], function ($, L) {
 
-    
-    function getApiUrl(apiKey) {
-        return 'http://maps.google.com/maps/api/js?key=' + apiKey + '&language=fr_FR&country=FR';
+    /**
+     * Retrieve Google Maps API
+     *
+     * @param config the config (contains API Key, country, etc...).
+     *
+     * @returns {string}
+     */
+    function getApiUrl(config) {
+        var apiKey = config['api_key'];
+        var country = config['country'] || 'FR';
+        var locale = config['locale'] || 'fr_FR';
+
+        return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=geometry&language=' + locale + '&country=' + country;
     }
 
     function addGoogleMapsLayer(map, type) {
         L.gridLayer.googleMutant({type: type}).addTo(map);
     }
-    
-    function initGeocoder(map) {
-        return new L.GeoSearch.Provider.Google();
-    }
-    
+
     Provider = {
-        init: function(map, config, cb) {
-            require([getApiUrl(config['api_key'])], function() {
-                addGoogleMapsLayer(map, config['type']);
-                Provider.geocoder = initGeocoder();
-                if (cb !== undefined) {
-                    cb(map);
+        init: function(map, config, callback) {
+            require([getApiUrl(config)], function() {
+                if (map !== null) {
+                    addGoogleMapsLayer(map, config['type']);
+                }
+                if (callback !== undefined) {
+                    callback(map);
                 }
             });
-        },
-
-        getGeocoder: function(map, config) {
-            return Provider.geocoder;
         }
-    }
+    };
 
     return Provider;
 });

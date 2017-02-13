@@ -26,12 +26,14 @@
     <virtualType name="Smile\Map\Model\Map\Osm" type="Smile\Map\Model\Map\DefaultMap">
         <arguments>
             <argument name="identifier" xsi:type="string">osm</argument>
+            <argument name="name" xsi:type="string">OpenStreetMap</argument>
         </arguments>
     </virtualType>
     
     <virtualType name="Smile\Map\Model\Map\Google" type="Smile\Map\Model\Map\DefaultMap">
         <arguments>
             <argument name="identifier" xsi:type="string">google</argument>
+            <argument name="name" xsi:type="string">Google Maps</argument>
         </arguments>
     </virtualType>
     

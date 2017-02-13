@@ -25,7 +25,7 @@ interface MapProviderInterface
     /**
      * Return configured map.
      *
-     * @return MapInteface
+     * @return MapInterface
      */
     public function getMap();
 }

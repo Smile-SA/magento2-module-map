@@ -13,7 +13,10 @@
  */
 namespace Smile\Map\Helper;
 
+use \Magento\Framework\Locale\Resolver as LocaleResolver;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Map helper.
@@ -33,6 +36,23 @@ class Map extends AbstractHelper
      * @var string
      */
     const SHARED_SETTINGS_NAME = 'all';
+
+    /**
+     * @var \Magento\Framework\Locale\Resolver
+     */
+    private $localeResolver;
+
+    /**
+     * Map constructor.
+     *
+     * @param Context        $context        Application Context
+     * @param LocaleResolver $localeResolver Locale Resolver
+     */
+    public function __construct(Context $context, LocaleResolver $localeResolver)
+    {
+        $this->localeResolver = $localeResolver;
+        parent::__construct($context);
+    }
 
     /**
      * Returns currently configured map provider.
@@ -65,6 +85,14 @@ class Map extends AbstractHelper
 
         $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH);
         array_walk($allConfig, $mapKeyFunc);
+
+        if (!isset($config['country'])) {
+            $config['country'] = $this->scopeConfig->getValue('general/country/default', ScopeInterface::SCOPE_STORES);
+        }
+
+        if (!isset($config['locale'])) {
+            $config['locale'] = $this->localeResolver->getLocale();
+        }
 
         return $config;
     }

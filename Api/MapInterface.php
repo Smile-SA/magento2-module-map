@@ -32,6 +32,13 @@ interface MapInterface
     public function getIdentifier();
 
     /**
+     * Returns current map provider name.
+     *
+     * @return string
+     */
+    public function getName();
+
+    /**
      * Return current map configuration.
      *
      * @return array

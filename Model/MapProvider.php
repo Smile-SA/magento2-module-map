@@ -60,4 +60,12 @@ class MapProvider implements MapProviderInterface
 
         return $this->mapProviders[$providerIdentifier];
     }
+
+    /**
+     * @return array|\Smile\Map\Api\MapInterface[]
+     */
+    public function getProviders()
+    {
+        return $this->mapProviders;
+    }
 }
