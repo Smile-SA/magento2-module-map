@@ -3,11 +3,20 @@
     "type": "magento2-module",
     "description": "Smile Map Utilities Module",
     "keywords": ["magento2", "map", "geocoding", "geolocalisation"],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
     "require": {
         "php": "~5.5.0|~5.6.0|~7.0.0",
         "magento/framework": "*",
         "magento/module-store": "*",
         "willdurand/geocoder": "^3.3"
+    },
+    "require-dev": {
+        "smile/magento2-smilelab-quality-suite": "1.0.0"
     },
     "license": "OSL-3.0",
     "authors": [
@@ -31,5 +40,7 @@
         "psr-4": {
             "Smile\\Map\\" : ""
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
