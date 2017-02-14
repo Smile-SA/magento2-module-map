@@ -32,6 +32,11 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     private $identifier;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @var array
      */
     private $config;
@@ -45,12 +50,14 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
      * Constructor.
      *
      * @param string        $identifier    Map identifier.
+     * @param string        $name          Map provider name.
      * @param MapHelper     $mapHelper     Map helper.
      * @param FilterManager $filterManager Template filter manager.
      */
-    public function __construct($identifier, MapHelper $mapHelper, FilterManager $filterManager)
+    public function __construct($identifier, string $name, MapHelper $mapHelper, FilterManager $filterManager)
     {
         $this->identifier    = $identifier;
+        $this->name          = $name;
         $this->config        = $mapHelper->getProviderConfiguration($identifier);
         $this->filterManager = $filterManager;
     }
@@ -69,6 +76,14 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     public function getIdentifier()
     {
         return $this->identifier;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

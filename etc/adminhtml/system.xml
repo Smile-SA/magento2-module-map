@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Smile_Map admin configuration UI fields.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this module to newer
+ * versions in the future.
+ *
+ *
+ * @category  Smile
+ * @package   Smile\Map
+ * @author    Romain Ruaud <romain.ruaud@smile.fr>
+ * @copyright 2017 Smile
+ * @license   Open Software License ("OSL") v. 3.0
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+
+        <tab id="smile_map" translate="label" sortOrder="250">
+            <label>Smile Map</label>
+        </tab>
+
+        <section id="smile_map" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Smile Map Settings</label>
+            <tab>smile_map</tab>
+            <resource>Magento_Backend::smile_map</resource>
+
+            <group id="map" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Map Settings</label>
+
+                <field id="provider" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Provider</label>
+                    <source_model>Smile\Map\Model\Config\Source\MapProvider</source_model>
+                </field>
+
+                <field id="provider_google_api_key" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google API Key</label>
+                    <depends>
+                        <field id="provider">google</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="address_templates" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Address templates</label>
+                <field id="text" type="textarea" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Text</label>
+                </field>
+                <field id="oneline" type="textarea" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Text One Line</label>
+                </field>
+                <field id="html" type="textarea" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>HTML</label>
+                </field>
+                <field id="pdf" type="textarea" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>PDF</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

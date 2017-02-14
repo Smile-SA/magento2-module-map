@@ -1,12 +1,12 @@
 /**
  * DISCLAIMER
  *
- * Do not edit or add to this file if you wish to upgrade Smile Elastic Suite to newer
+ * Do not edit or add to this file if you wish to upgrade this module to newer
  * versions in the future.
  *
  *
  * @category  Smile
- * @package   Smile\StoreLocator
+ * @package   Smile\Map
  * @author    Romain Ruaud <romain.ruaud@smile.fr>
  * @author    Guillaume Vrac <guillaume.vrac@smile.fr>
  * @copyright 2016 Smile
@@ -16,9 +16,12 @@
 var config = {
     map: {
         '*': {
-            'smile-map'                 : 'Smile_Map/js/map',
-            'smile-map-provider-osm'    : 'Smile_Map/js/map-provider/osm',
-            'smile-map-provider-google' : 'Smile_Map/js/map-provider/google-maps'
+            'smile-map'                      : 'Smile_Map/js/map',
+            'smile-map-provider-osm'         : 'Smile_Map/js/map-provider/osm',
+            'smile-map-provider-google'      : 'Smile_Map/js/map-provider/google-maps',
+            'smile-geocoder'                 : 'Smile_Map/js/geocoder',
+            'smile-geocoder-provider-osm'    : 'Smile_Map/js/geocoder-provider/osm',
+            'smile-geocoder-provider-google' : 'Smile_Map/js/geocoder-provider/google'
         }
     },
     paths: {
@@ -26,7 +29,7 @@ var config = {
         'leaflet-geosearch'         : 'Smile_Map/leaflet/plugins/geosearch/l.control.geosearch',
         'leaflet-geosearch-osm'     : 'Smile_Map/leaflet/plugins/geosearch/l.geosearch.provider.openstreetmap',
         'leaflet-geosearch-google'  : 'Smile_Map/leaflet/plugins/geosearch/l.geosearch.provider.google',
-        'google-mutant'             : 'Smile_Map/leaflet/google-mutant',
+        'google-mutant'             : 'Smile_Map/leaflet/google-mutant'
     },
     shim: {
         'leaflet': {
