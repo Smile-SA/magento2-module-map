@@ -43,6 +43,20 @@
                         <field id="provider">google</field>
                     </depends>
                 </field>
+
+                <field id="provider_osm_direction_url_template" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Directions Url</label>
+                    <depends>
+                        <field id="provider">osm</field>
+                    </depends>
+                </field>
+
+                <field id="provider_google_direction_url_template" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Directions Url</label>
+                    <depends>
+                        <field id="provider">google</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="address_templates" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
