@@ -12,24 +12,25 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 /*global define*/
-define([], function() {
-        "use strict";
-        var markersList = [];
+define(['ko', 'uiClass'], function(ko, Class) {
+    "use strict";
 
-        return {
-            markersList: markersList,
+    return Class.extend({
 
-            setList: function (list) {
-                this.markersList = list;
-            },
+        initialize: function () {
+            this._super()
+                .initObservable();
 
-            getList: function () {
-                return this.markersList;
-            },
+            return this;
+        },
 
-            filter: function (callback) {
-                return callback(this.markersList);
-            }
-        };
-    }
-);
+        initObservable: function () {
+            this.items = ko.observableArray(this.items);
+            return this;
+        },
+
+        getList: function() {
+            return this.items();
+        }
+    });
+});
