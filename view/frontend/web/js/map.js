@@ -65,6 +65,7 @@ define([
          */
         resetMap: function() {
             this.selectedMarker(null);
+            this.currentBounds = this.initialBounds;
             this.map.fitBounds(this.initialBounds);
         },
 
@@ -80,8 +81,27 @@ define([
          * Callback after map provider is ready and has been initialized
          */
         onMapReady: function() {
-            this.loadMarkers();
             this.initGeocoderBinding();
+            this.loadMarkers();
+            if (this.geolocalize === true && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(this.applyPosition.bind(this));
+                this.currentBounds = this.initialBounds;
+            } else if (!this.geocoder || !this.geocoder.fulltextSearch()) {
+                this.map.fitBounds(this.initialBounds);
+            }
+        },
+
+        /**
+         * Center the map on a given position
+         *
+         * @param position
+         */
+        applyPosition: function(position) {
+            if (position && position.coords) {
+                var coords = new L.latLng(position.coords.latitude, position.coords.longitude);
+                this.map.setView(coords, 10);
+                this.currentBounds = this.map.getBounds();
+            }
         },
 
         /**
@@ -114,11 +134,9 @@ define([
                 }.bind(this));
                 markers.push(marker);
             }.bind(this));
-            
+
             var group = new L.featureGroup(markers);
-            this.map.fitBounds(group.getBounds());
-            this.initialBounds = this.map.getBounds();
-            this.currentBounds = this.initialBounds;
+            this.initialBounds = group.getBounds();
         },
 
         /**
@@ -136,6 +154,8 @@ define([
         selectMarker: function(marker) {
             this.selectedMarker(marker);
             var coords = new L.latLng(marker.latitude, marker.longitude);
+            // Set current bounds just before zooming in : to allow returning to these bounds after.
+            this.currentBounds = this.map.getBounds();
             this.map.setView(coords, 15);
         },
 
@@ -144,13 +164,21 @@ define([
          */
         refreshDisplayedMarkers: function () {
             var bounds = this.map.getBounds();
-
             var displayedMarkers = this.filterMarkersByBounds(this.markers(), bounds);
+            var zoom = this.map.getZoom();
+            var limit = 0;
+
+            while (displayedMarkers.length === 0 || limit === 10) {
+                zoom = zoom - 1;
+                this.map.setZoom(zoom);
+                limit ++;
+                displayedMarkers = this.filterMarkersByBounds(this.markers(), this.map.getBounds());
+            }
 
             if (displayedMarkers.length === 0) {
                 displayedMarkers = this.markers();
             }
-            
+
             this.displayedMarkers(displayedMarkers);
         },
 
