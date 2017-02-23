@@ -89,7 +89,9 @@ define(['jquery', 'leaflet'], function ($, L) {
 
         markersList.forEach(function(marker) {
             var itemPosition = new google.maps.LatLng(marker.latitude, marker.longitude);
-            if (google.maps.geometry.spherical.computeDistanceBetween(itemPosition, center) <= radius) {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(itemPosition, center);
+            if (distance <= radius) {
+                marker.distance = distance;
                 list.push(marker);
             }
         }, this);

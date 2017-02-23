@@ -73,11 +73,14 @@ define([
          *
          * @param markersList    An array containing the markers
          * @param centerPosition The center position
+         * @param radius         The radius to check
          *
          * @returns {*|Array}
          */
-        filterMarkersListByPositionRadius: function(markersList, centerPosition) {
-            var radius = parseInt(this.radius, 10);
+        filterMarkersListByPositionRadius: function(markersList, centerPosition, radius) {
+            if (!radius) {
+                radius = parseInt(this.radius, 10);
+            }
             return this.geocoder.filterMarkersListByPositionRadius(markersList, centerPosition, radius)
         }
     })

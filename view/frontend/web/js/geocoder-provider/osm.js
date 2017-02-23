@@ -78,7 +78,9 @@ define(['jquery', 'leaflet'], function ($, L) {
 
         markersList.forEach(function(marker) {
             var itemPosition = new L.LatLng(marker.latitude, marker.longitude);
-            if (itemPosition.distanceTo(center) <= radius) {
+            var distance = itemPosition.distanceTo(center);
+            if (distance <= radius) {
+                marker.distance = distance;
                 list.push(marker);
             }
         }, this);

@@ -38,7 +38,7 @@ define([
          * Observe events on elements
          */
         observeElements: function() {
-            this.observe(['markers', 'displayedMarkers', 'selectedMarker', 'fulltextSearch']);
+            this.observe(['markers', 'displayedMarkers', 'nearbyMarkers', 'selectedMarker', 'fulltextSearch']);
             this.markers.subscribe(this.loadMarkers.bind(this));
         },
 
@@ -99,7 +99,7 @@ define([
         applyPosition: function(position) {
             if (position && position.coords) {
                 var coords = new L.latLng(position.coords.latitude, position.coords.longitude);
-                this.map.setView(coords, 10);
+                this.map.setView(coords, 11);
                 this.currentBounds = this.map.getBounds();
             }
         },
@@ -112,7 +112,7 @@ define([
                 this.geocoder = geocoder;
                 geocoder.currentResult.subscribe(function (result) {
                     if (result && result.bounds) {
-                        this.map.fitBounds(result.bounds);
+                        this.map.setView(result.location, 11);
                         this.currentBounds = result.bounds;
                     } else {
                         this.resetMap();
@@ -152,11 +152,38 @@ define([
          * @param marker
          */
         selectMarker: function(marker) {
+            // Set current bounds before zooming in : to allow returning to these bounds after.
+            if (!this.selectedMarker()) {
+                this.currentBounds = this.map.getBounds();
+            }
+
             this.selectedMarker(marker);
             var coords = new L.latLng(marker.latitude, marker.longitude);
-            // Set current bounds just before zooming in : to allow returning to these bounds after.
-            this.currentBounds = this.map.getBounds();
+            this.refreshNearByMarkers(coords);
+
+            // Remove current markers from nearby markers
+            var nearbyMarkers = this.nearbyMarkers();
+            nearbyMarkers.shift();
+            this.nearbyMarkers(nearbyMarkers);
+
             this.map.setView(coords, 15);
+        },
+
+        /**
+         * Retrieve a list of markers nearby given coordinates
+         *
+         * @param coords
+         */
+        refreshNearByMarkers: function(coords) {
+            if (this.geocoder) {
+                var nearbyMarkers = this.geocoder.filterMarkersListByPositionRadius(this.markers(), coords);
+                nearbyMarkers = nearbyMarkers.sort(function(a, b) {
+                    var distanceA = a['distance']; var distanceB = b['distance'];
+                    return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
+                });
+
+                this.nearbyMarkers(nearbyMarkers);
+            }
         },
 
         /**
@@ -166,17 +193,10 @@ define([
             var bounds = this.map.getBounds();
             var displayedMarkers = this.filterMarkersByBounds(this.markers(), bounds);
             var zoom = this.map.getZoom();
-            var limit = 0;
-
-            while (displayedMarkers.length === 0 || limit === 10) {
-                zoom = zoom - 1;
-                this.map.setZoom(zoom);
-                limit ++;
-                displayedMarkers = this.filterMarkersByBounds(this.markers(), this.map.getBounds());
-            }
 
             if (displayedMarkers.length === 0) {
-                displayedMarkers = this.markers();
+                zoom = zoom - 1;
+                this.map.setZoom(zoom);
             }
 
             this.displayedMarkers(displayedMarkers);
@@ -211,6 +231,15 @@ define([
          */
         countDisplayedMarkers : function() {
             return this.displayedMarkers().length;
+        },
+
+        /**
+         * Count the number of nearby markers.
+         *
+         * @returns int
+         */
+        countNearbyMarkers : function() {
+            return this.nearbyMarkers().length;
         },
 
         /**
