@@ -54,7 +54,7 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
      * @param MapHelper     $mapHelper     Map helper.
      * @param FilterManager $filterManager Template filter manager.
      */
-    public function __construct($identifier, string $name, MapHelper $mapHelper, FilterManager $filterManager)
+    public function __construct($identifier, $name, MapHelper $mapHelper, FilterManager $filterManager)
     {
         $this->identifier    = $identifier;
         $this->name          = $name;
