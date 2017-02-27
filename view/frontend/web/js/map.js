@@ -49,7 +49,7 @@ define([
          * @param component Component
          */
         initMap: function (element, component) {
-            component.map = L.map(element, {zoomControl: false, attributionControl: false});
+            component.map = L.map(element, {zoomControl: false, attributionControl: false, scrollWheelZoom: $(document).width() > 480});
             component.map.on('moveend', component.refreshDisplayedMarkers.bind(component));
             layerControl = L.control.zoom({position: component['controls_position']});
             layerControl.addTo(component.map);
