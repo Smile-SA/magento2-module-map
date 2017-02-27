@@ -16,5 +16,5 @@ cache:
     - $HOME/.composer/cache
 
 script:
-    - vendor/bin/phpcs --ignore=/vendor/,/app/ --standard=vendor/smile/magento2-smilelab-phpcs/phpcs-standards/SmileLab --extensions=php ./
-    - vendor/bin/phpmd ./ text vendor/smile/magento2-smilelab-phpmd/phpmd-rulesets/rulset.xml --exclude vendor
+    - vendor/bin/phpcs --ignore=/vendor/,/app/,/pub/ --standard=vendor/smile/magento2-smilelab-phpcs/phpcs-standards/SmileLab --extensions=php ./
+    - vendor/bin/phpmd ./ text vendor/smile/magento2-smilelab-phpmd/phpmd-rulesets/rulset.xml --exclude vendor,pub
