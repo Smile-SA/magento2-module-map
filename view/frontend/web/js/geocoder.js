@@ -49,12 +49,13 @@ define([
          */
         onGeocoderReady: function() {
             this.geocoder = this.provider.getGeocoder();
+            this.onSearch();
         },
 
         /**
          * Trigger the geocoding on search. Exposes current result then.
          */
-        onSearch:  function() {
+        onSearch: function() {
             if (!this.fulltextSearch() || this.fulltextSearch().trim().length === 0) {
                 this.currentResult(null);
             } else {
@@ -72,11 +73,14 @@ define([
          *
          * @param markersList    An array containing the markers
          * @param centerPosition The center position
+         * @param radius         The radius to check
          *
          * @returns {*|Array}
          */
-        filterMarkersListByPositionRadius: function(markersList, centerPosition) {
-            var radius = parseInt(this.radius, 10);
+        filterMarkersListByPositionRadius: function(markersList, centerPosition, radius) {
+            if (!radius) {
+                radius = parseInt(this.radius, 10);
+            }
             return this.geocoder.filterMarkersListByPositionRadius(markersList, centerPosition, radius)
         }
     })
