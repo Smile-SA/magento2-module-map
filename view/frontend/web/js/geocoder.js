@@ -49,7 +49,6 @@ define([
          */
         onGeocoderReady: function() {
             this.geocoder = this.provider.getGeocoder();
-            this.onSearch();
         },
 
         /**
