@@ -81,8 +81,9 @@ define([
          * Callback after map provider is ready and has been initialized
          */
         onMapReady: function() {
-            this.initGeocoderBinding(this.initPosition.bind(this));
+            this.initGeocoderBinding();
             this.loadMarkers();
+            this.initPosition();
         },
 
         /**
@@ -93,7 +94,7 @@ define([
             if (position !== null) {
                 this.currentBounds = this.initialBounds;
                 this.applyPosition(position);
-            } else if (!this.geocoder || !this.geocoder.fulltextSearch()) {
+            } else {
                 this.map.fitBounds(this.initialBounds);
             }
         },
@@ -114,16 +115,16 @@ define([
         /**
          * Init the geocoding component binding
          */
-        initGeocoderBinding: function(callback) {
+        initGeocoderBinding: function() {
             registry.get(this.name + '.geocoder', function (geocoder) {
                 this.geocoder = geocoder;
+
                 geocoder.currentResult.subscribe(function (result) {
                     if (result && result.bounds) {
                         this.map.setView(result.location, 11);
                         this.currentBounds = result.bounds;
                     } else {
                         this.resetMap();
-                        return callback();
                     }
                 }.bind(this));
             }.bind(this));
