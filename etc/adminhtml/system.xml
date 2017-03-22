@@ -19,14 +19,10 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
 
-        <tab id="smile_map" translate="label" sortOrder="250">
-            <label>Smile Map</label>
-        </tab>
-
         <section id="smile_map" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
-            <label>Smile Map Settings</label>
-            <tab>smile_map</tab>
+            <label>Smile Map</label>
+            <tab>service</tab>
             <resource>Magento_Backend::smile_map</resource>
 
             <group id="map" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
