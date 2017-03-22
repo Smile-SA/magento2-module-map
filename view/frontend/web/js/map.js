@@ -81,11 +81,19 @@ define([
          * Callback after map provider is ready and has been initialized
          */
         onMapReady: function() {
-            this.initGeocoderBinding();
+            this.initGeocoderBinding(this.initPosition.bind(this));
             this.loadMarkers();
-            if (this.geolocalize === true && navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(this.applyPosition.bind(this));
+        },
+
+        /**
+         * Init current position from URL query params, if any.
+         */
+        initPosition: function () {
+            var query = this.getQueryParams(document.location.search);
+            if (query.lat && query.long) {
+                var position = {coords: {latitude: query.lat, longitude: query.long}};
                 this.currentBounds = this.initialBounds;
+                this.applyPosition(position);
             } else if (!this.geocoder || !this.geocoder.fulltextSearch()) {
                 this.map.fitBounds(this.initialBounds);
             }
@@ -107,7 +115,7 @@ define([
         /**
          * Init the geocoding component binding
          */
-        initGeocoderBinding: function() {
+        initGeocoderBinding: function(callback) {
             registry.get(this.name + '.geocoder', function (geocoder) {
                 this.geocoder = geocoder;
                 geocoder.currentResult.subscribe(function (result) {
@@ -116,6 +124,7 @@ define([
                         this.currentBounds = result.bounds;
                     } else {
                         this.resetMap();
+                        return callback();
                     }
                 }.bind(this));
             }.bind(this));
@@ -249,6 +258,26 @@ define([
          */
         displayReset : function() {
             return this.displayedMarkers().length !== this.markers().length
+        },
+
+        /**
+         * Parse query params from query String
+         *
+         * @param qs
+         * @returns {{}}
+         */
+        getQueryParams : function (qs) {
+            qs = qs.split('+').join(' ');
+
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+
+            return params;
         }
     });
 });
