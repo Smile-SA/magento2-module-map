@@ -11,6 +11,10 @@ define(['jquery', 'leaflet'], function ($, L) {
             + L.Util.getParamString(parameters);
     }
 
+    function getGeolocalizeApi() {
+        return '//freegeoip.net/json/?callback=?';
+    }
+
     var geocoder = null;
 
     /**
@@ -86,6 +90,15 @@ define(['jquery', 'leaflet'], function ($, L) {
         }, this);
 
         return list;
+    };
+
+    /**
+     * Retrieve User Geolocalization. Used as a fallback when navigator.geolocation.getCurrentPosition fails
+     *
+     * @param callback
+     */
+    Geocoder.prototype.geoLocalizeViaApi = function (callback) {
+        $.getJSON(getGeolocalizeApi(), function(success) {callback({coords: {latitude: success.latitude, longitude: success.longitude}})});
     };
 
     /**

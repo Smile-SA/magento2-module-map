@@ -15,6 +15,17 @@ define(['jquery', 'leaflet'], function ($, L) {
         return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=geometry&language=' + locale + '&country=' + country;
     }
 
+    /**
+     * Retrieve Google Geolocalization API URL
+     *
+     * @param config the config (contains API Key, country, etc...).
+     *
+     * @returns {string}
+     */
+    function getGeolocalizeApi(config) {
+        return '//www.googleapis.com/geolocation/v1/geolocate?key=' + apiKey;
+    }
+
     var geocoder = null;
 
     /**
@@ -97,6 +108,15 @@ define(['jquery', 'leaflet'], function ($, L) {
         }, this);
 
         return list;
+    };
+
+    /**
+     * Retrieve User Geolocalization. Used as a fallback when navigator.geolocation.getCurrentPosition fails
+     *
+     * @param callback
+     */
+    Geocoder.prototype.geoLocalizeViaApi = function (callback) {
+        $.post(getGeolocalizeApi(this.options), function(success) {callback({coords: {latitude: success.location.lat, longitude: success.location.lng}})});
     };
 
     /**
