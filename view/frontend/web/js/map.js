@@ -89,9 +89,8 @@ define([
          * Init current position from URL query params, if any.
          */
         initPosition: function () {
-            var query = this.getQueryParams(document.location.search);
-            if (query.lat && query.long) {
-                var position = {coords: {latitude: query.lat, longitude: query.long}};
+            var position = this.getLocationFromHash();
+            if (position !== null) {
                 this.currentBounds = this.initialBounds;
                 this.applyPosition(position);
             } else if (!this.geocoder || !this.geocoder.fulltextSearch()) {
@@ -278,6 +277,25 @@ define([
             }
 
             return params;
+        },
+
+        /**
+         * Return current location from URL anchor if any.
+         *
+         * @returns {*}
+         */
+        getLocationFromHash : function() {
+            var location = null;
+
+            var hash = window.location.hash.substr(1);
+            if (hash) {
+                hash = hash.split(",");
+                if (hash.length === 2) {
+                    location = {coords: {latitude: hash[0], longitude: hash[1]}};
+                }
+            }
+
+            return location;
         }
     });
 });
