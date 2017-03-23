@@ -24,7 +24,7 @@ define(['jquery', 'leaflet'], function ($, L) {
      */
     function getGeolocalizeApi(config) {
         var apiKey = config['api_key'];
-        return '//www.googleapis.com/geolocation/v1/geolocate?key=' + apiKey;
+        return 'https://www.googleapis.com/geolocation/v1/geolocate?key=' + apiKey;
     }
 
     var geocoder = null;
