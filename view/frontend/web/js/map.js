@@ -107,8 +107,33 @@ define([
         applyPosition: function(position) {
             if (position && position.coords) {
                 var coords = new L.latLng(position.coords.latitude, position.coords.longitude);
-                this.map.setView(coords, 11);
-                this.currentBounds = this.map.getBounds();
+
+                var isMarker = false;
+                this.markers().forEach(function(marker) {
+                    if (marker.latitude === position.coords.latitude && marker.longitude === position.coords.longitude) {
+                        isMarker = marker;
+                    }
+                }, this);
+
+                if (isMarker) {
+                    this.currentBounds = this.initialBounds;
+                    this.selectedMarker(isMarker);
+                    this.map.setView(coords, 15);
+                } else {
+                    this.map.setView(coords, 11);
+                    this.currentBounds = this.map.getBounds();
+                }
+
+                this.setHashFromLocation(position);
+            }
+        },
+
+        /**
+         * Geolocalize the user with geocoder and apply position to map.
+         */
+        geolocalize: function() {
+            if (this.geocoder) {
+                this.geocoder.geolocalize(this.applyPosition.bind(this));
             }
         },
 
@@ -122,6 +147,7 @@ define([
                 geocoder.currentResult.subscribe(function (result) {
                     if (result && result.bounds) {
                         this.map.setView(result.location, 11);
+                        this.setHashFromLocation({coords : {latitude : result.location.lat, longitude : result.location.lng}});
                         this.currentBounds = result.bounds;
                     } else {
                         this.resetMap();
@@ -169,6 +195,7 @@ define([
             this.selectedMarker(marker);
             var coords = new L.latLng(marker.latitude, marker.longitude);
             this.refreshNearByMarkers(coords);
+            this.setHashFromLocation({coords : marker});
 
             // Remove current markers from nearby markers
             var nearbyMarkers = this.nearbyMarkers();
@@ -202,6 +229,9 @@ define([
             var bounds = this.map.getBounds();
             var displayedMarkers = this.filterMarkersByBounds(this.markers(), bounds);
             var zoom = this.map.getZoom();
+
+            var center = this.map.getCenter();
+            this.setHashFromLocation({coords : {latitude : center.lat, longitude : center.lng}});
 
             if (displayedMarkers.length === 0) {
                 zoom = zoom - 1;
@@ -297,6 +327,17 @@ define([
             }
 
             return location;
+        },
+
+        /**
+         * Set current window location from Hash
+         *
+         * @param location
+         */
+        setHashFromLocation : function (location) {
+            if (location.coords && location.coords.latitude && location.coords.longitude) {
+                window.location.hash = [location.coords.latitude, location.coords.longitude].join(",");
+            }
         }
     });
 });
