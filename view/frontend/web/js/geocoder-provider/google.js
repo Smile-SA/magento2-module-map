@@ -73,14 +73,24 @@ define(['jquery', 'leaflet'], function ($, L) {
      * @returns {{name: *, bounds: o.LatLngBounds, location: o.LatLng}}
      */
     Geocoder.prototype.prepareResult = function (result) {
-        var processedResult = {
-            name   : result['address_components'][0]['short_name'],
-            bounds : new L.LatLngBounds(
-                {lat: result['geometry']['bounds'].getNorthEast().lat(), lng: result['geometry']['bounds'].getNorthEast().lng()},
-                {lat: result['geometry']['bounds'].getSouthWest().lat(), lng: result['geometry']['bounds'].getSouthWest().lng()}
-            ),
-            location: new L.LatLng(result['geometry']['location'].lat(), result['geometry']['location'].lng())
-        };
+        var processedResult = {};
+
+        if (result['geometry']['bounds']) {
+            processedResult = {
+                name: result['address_components'][0]['short_name'],
+                bounds: new L.LatLngBounds(
+                    {
+                        lat: result['geometry']['bounds'].getNorthEast().lat(),
+                        lng: result['geometry']['bounds'].getNorthEast().lng()
+                    },
+                    {
+                        lat: result['geometry']['bounds'].getSouthWest().lat(),
+                        lng: result['geometry']['bounds'].getSouthWest().lng()
+                    }
+                ),
+                location: new L.LatLng(result['geometry']['location'].lat(), result['geometry']['location'].lng())
+            };
+        }
 
         return processedResult;
     };
