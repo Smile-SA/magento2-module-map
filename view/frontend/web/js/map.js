@@ -67,6 +67,7 @@ define([
             this.selectedMarker(null);
             this.currentBounds = this.initialBounds;
             this.map.fitBounds(this.initialBounds);
+            this.resetHash();
         },
 
         /**
@@ -75,6 +76,8 @@ define([
         resetBounds: function() {
             this.selectedMarker(null);
             this.map.fitBounds(this.currentBounds);
+            var center = this.currentBounds.getCenter();
+            this.setHashFromLocation({coords : {latitude : center.lat, longitude : center.lng}});
         },
 
         /**
@@ -230,9 +233,6 @@ define([
             var displayedMarkers = this.filterMarkersByBounds(this.markers(), bounds);
             var zoom = this.map.getZoom();
 
-            var center = this.map.getCenter();
-            this.setHashFromLocation({coords : {latitude : center.lat, longitude : center.lng}});
-
             if (displayedMarkers.length === 0) {
                 zoom = zoom - 1;
                 this.map.setZoom(zoom);
@@ -338,6 +338,13 @@ define([
             if (location.coords && location.coords.latitude && location.coords.longitude) {
                 window.location.hash = [location.coords.latitude, location.coords.longitude].join(",");
             }
+        },
+
+        /**
+         * Reset current window location hash
+         */
+        resetHash : function() {
+            window.location.hash = "";
         }
     });
 });
