@@ -337,6 +337,7 @@ define([
         setHashFromLocation : function (location) {
             if (location.coords && location.coords.latitude && location.coords.longitude) {
                 window.location.hash = [location.coords.latitude, location.coords.longitude].join(",");
+                history.replaceState('', document.title, window.location.pathname);
             }
         },
 
@@ -344,7 +345,8 @@ define([
          * Reset current window location hash
          */
         resetHash : function() {
-            window.location.hash = "";
+            window.location.hash = "_";
+            return false;
         }
     });
 });
