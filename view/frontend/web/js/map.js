@@ -53,11 +53,15 @@ define([
             component.map.on('moveend', component.refreshDisplayedMarkers.bind(component));
             layerControl = L.control.zoom({position: component['controls_position']});
             layerControl.addTo(component.map);
-            
-            require(['smile-map-provider-' + component.provider], function(provider) {
-                provider.init(component.map, component, component.onMapReady.bind(component));
-                component.provider = provider;
-            });
+
+            if (component.provider !== null && (typeof component.provider === 'function' || typeof component.provider === 'object')) {
+                component.provider.init(component.map, component, component.onMapReady.bind(component));
+            } else {
+                require(['smile-map-provider-' + component.provider], function (provider) {
+                    provider.init(component.map, component, component.onMapReady.bind(component));
+                    component.provider = provider;
+                });
+            }
         },
 
         /**

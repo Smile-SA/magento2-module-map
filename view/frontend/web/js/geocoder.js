@@ -38,10 +38,14 @@ define([
          * @param component The JS Component
          */
         initGeocoder: function (element, component) {
-            require(['smile-geocoder-provider-' + component.provider], function(provider) {
-                provider.init(component, component.onGeocoderReady.bind(component));
-                component.provider = provider;
-            }).bind(this);
+            if (component.provider !== null && (typeof component.provider === 'function' || typeof component.provider === 'object')) {
+                component.provider.init(component, component.onGeocoderReady.bind(component));
+            } else {
+                require(['smile-geocoder-provider-' + component.provider], function(provider) {
+                    provider.init(component, component.onGeocoderReady.bind(component));
+                    component.provider = provider;
+                }).bind(this);
+            }
         },
 
         /**
