@@ -11,8 +11,9 @@ define(['jquery', 'leaflet'], function ($, L) {
         var apiKey = config['api_key'];
         var country = config['country'] || 'FR';
         var locale = config['locale'] || 'fr_FR';
+        var libraries = config['libraries'] || 'geometry';
 
-        return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=geometry&language=' + locale + '&country=' + country;
+        return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=' + libraries + '&language=' + locale + '&country=' + country;
     }
 
     /**

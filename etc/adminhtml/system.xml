@@ -40,6 +40,14 @@
                     </depends>
                 </field>
 
+                <field id="provider_google_libraries" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google API Libraries</label>
+                    <depends>
+                        <field id="provider">google</field>
+                    </depends>
+                    <comment>Comma separated list of Google libraries to use. They must be enabled for your API Key. Eg: geometry, places</comment>
+                </field>
+
                 <field id="provider_osm_direction_url_template" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Directions Url</label>
                     <depends>
