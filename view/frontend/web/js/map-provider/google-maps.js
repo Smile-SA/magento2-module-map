@@ -3,7 +3,7 @@ define([
     'leaflet',
     'google-mutant',
     'leaflet-geosearch',
-    'leaflet-geosearch-google',
+    'leaflet-geosearch-google'
 ], function ($, L) {
 
     /**
@@ -35,6 +35,23 @@ define([
                     callback(map);
                 }
             });
+        },
+
+        /**
+         * Add distance from center of map to a given list of markers
+         *
+         * @param markersList
+         * @param centerPosition
+         * @returns {*}
+         */
+        addDistanceToMarkers: function (markersList, centerPosition) {
+            var center = new google.maps.LatLng(centerPosition.lat, centerPosition.lng);
+            markersList.forEach(function(marker) {
+                var itemPosition = new google.maps.LatLng(marker.latitude, marker.longitude);
+                marker.distance(google.maps.geometry.spherical.computeDistanceBetween(itemPosition, center));
+            }, this);
+
+            return markersList;
         }
     };
 

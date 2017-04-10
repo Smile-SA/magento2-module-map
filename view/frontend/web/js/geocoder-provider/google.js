@@ -113,7 +113,7 @@ define(['jquery', 'leaflet'], function ($, L) {
             var itemPosition = new google.maps.LatLng(marker.latitude, marker.longitude);
             var distance = google.maps.geometry.spherical.computeDistanceBetween(itemPosition, center);
             if (distance <= radius) {
-                marker.distance = distance;
+                marker.distance(distance);
                 list.push(marker);
             }
         }, this);

@@ -31,7 +31,13 @@ define([
         initMarkers: function() {
             var markersList = new MarkersList({items : this.markers});
             this.markers = markersList.getList();
-            this.displayedMarkers = ko.observable(markersList.getList());
+
+            this.markers.forEach(function(marker) {
+                marker.distance = ko.observable(0);
+            });
+
+            this.addDistanceToMarkers(this.markers, this.map.getCenter());
+            this.displayedMarkers = ko.observable(this.markers);
         },
 
         /**
@@ -51,6 +57,7 @@ define([
         initMap: function (element, component) {
             component.map = L.map(element, {zoomControl: false, attributionControl: false, scrollWheelZoom: $(document).width() > 480});
             component.map.on('moveend', component.refreshDisplayedMarkers.bind(component));
+
             layerControl = L.control.zoom({position: component['controls_position']});
             layerControl.addTo(component.map);
 
@@ -235,12 +242,15 @@ define([
         refreshDisplayedMarkers: function () {
             var bounds = this.map.getBounds();
             var displayedMarkers = this.filterMarkersByBounds(this.markers(), bounds);
+
             var zoom = this.map.getZoom();
 
             if (displayedMarkers.length === 0) {
                 zoom = zoom - 1;
                 this.map.setZoom(zoom);
             }
+
+            displayedMarkers = this.addDistanceToMarkers(displayedMarkers, this.map.getCenter());
 
             this.displayedMarkers(displayedMarkers);
         },
@@ -260,6 +270,7 @@ define([
             markers.forEach(function(marker) {
                 var coords = new L.latLng(marker.latitude, marker.longitude);
                 if (bounds.contains(coords)) {
+
                     list.push(marker);
                 }
             }, this);
@@ -350,6 +361,21 @@ define([
         resetHash : function() {
             window.location.hash = "_";
             return false;
+        },
+
+        /**
+         * Add distance from center of map to a given list of markers
+         *
+         * @param markersList
+         * @param centerPosition
+         * @returns {*}
+         */
+        addDistanceToMarkers: function (markersList, centerPosition) {
+            if (this.provider !== null && (typeof this.provider === 'function' || typeof this.provider === 'object')) {
+                return this.provider.addDistanceToMarkers(markersList, centerPosition);
+            } else {
+                return markersList;
+            }
         }
     });
 });
