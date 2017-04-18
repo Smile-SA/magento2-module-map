@@ -36,7 +36,10 @@ define([
                 marker.distance = ko.observable(0);
             });
 
-            this.addDistanceToMarkers(this.markers, this.map.getCenter());
+            this.markers.forEach(function(marker) {
+                marker.distance = ko.observable(0);
+            });
+
             this.displayedMarkers = ko.observable(this.markers);
         },
 
