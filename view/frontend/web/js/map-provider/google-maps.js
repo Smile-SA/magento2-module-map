@@ -22,15 +22,19 @@ define([
         return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=' + libraries + '&language=' + locale + '&country=' + country;
     }
 
-    function addGoogleMapsLayer(map, type) {
-        L.gridLayer.googleMutant({type: type}).addTo(map);
+    function addGoogleMapsLayer(map, config) {
+        var mutantConfig = {type: config['type'] || 'roadmap'};
+        if (config['map_styles'] && (config['map_styles'] !== '')) {
+            mutantConfig.styles = JSON.parse(config['map_styles'].replace(/(\r\n|\n|\r)/gm,""));
+        }
+        L.gridLayer.googleMutant(mutantConfig).addTo(map);
     }
 
     Provider = {
         init: function(map, config, callback) {
             require([getApiUrl(config)], function() {
                 if (map !== null) {
-                    addGoogleMapsLayer(map, config['type']);
+                    addGoogleMapsLayer(map, config);
                 }
                 if (callback !== undefined) {
                     callback(map);

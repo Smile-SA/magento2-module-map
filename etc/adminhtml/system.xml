@@ -48,6 +48,14 @@
                     <comment>Comma separated list of Google libraries to use. They must be enabled for your API Key. Eg: geometry, places</comment>
                 </field>
 
+                <field id="provider_google_map_styles" translate="label" type="textarea" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Map Styles</label>
+                    <depends>
+                        <field id="provider">google</field>
+                    </depends>
+                    <comment><![CDATA[The styles to be added to the Google Map Api. In a JSON format. Can be built from <a href='https://mapstyle.withgoogle.com/' target='_blank'>Google Mapstyles</a>]]></comment>
+                </field>
+
                 <field id="provider_osm_direction_url_template" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Directions Url</label>
                     <depends>

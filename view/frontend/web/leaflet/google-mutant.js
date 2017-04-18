@@ -21,7 +21,8 @@ L.GridLayer.GoogleMutant = L.GridLayer.extend({
         // 🍂option type: String = 'roadmap'
         // Google's map type. Valid values are 'roadmap', 'satellite' or 'terrain'. 'hybrid' is not really supported.
         type: 'roadmap',
-        maxNativeZoom: 21
+        maxNativeZoom: 21,
+        styles: ''
     },
 
     initialize: function (options) {
@@ -138,7 +139,7 @@ L.GridLayer.GoogleMutant = L.GridLayer.extend({
             disableDoubleClickZoom: true,
             scrollwheel: false,
             streetViewControl: false,
-//             styles: this.options.mapOptions.styles,
+            styles: this.options.styles,
             backgroundColor: 'transparent'
         });
 
