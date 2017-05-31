@@ -17,7 +17,6 @@
  -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <title>Shop Search</title>
         <css src="Smile_Map::leaflet/leaflet.css"/>
         <script src="Smile_Map::js/polyfill/ie11/promise.min.js" ie_condition="IE 11"/>
     </head>
