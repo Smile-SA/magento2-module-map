@@ -163,7 +163,6 @@ class Map extends AbstractHelper
         }
 
         return $url;
-
     }
 
     /**
@@ -195,5 +194,4 @@ class Map extends AbstractHelper
 
         return $this->mediaDirectory;
     }
-
 }
