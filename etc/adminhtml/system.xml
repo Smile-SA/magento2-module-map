@@ -69,6 +69,13 @@
                         <field id="provider">google</field>
                     </depends>
                 </field>
+
+                <field id="provider_all_markerIcon" translate="label" type="image" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="50">
+                    <label>Marker Icon</label>
+                    <backend_model>Smile\Map\Model\Config\Backend\MarkerIcon</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">smile_map/marker</upload_dir>
+                    <base_url type="media" scope_info="1">smile_map/marker</base_url>
+                </field>
             </group>
 
             <group id="address_templates" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">

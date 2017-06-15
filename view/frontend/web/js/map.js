@@ -13,6 +13,7 @@ define([
            tile_url: "http://{s}.tile.osm.org/{z}/{x}/{y}.png",
            controls_position: 'topright',
            markers : [],
+           markerIconSize: [18,23],
            selectedMarker : null
         },
 
@@ -178,9 +179,10 @@ define([
          */
         loadMarkers: function() {
             var markers = [];
+            var icon = L.icon({iconUrl: this.markerIcon, iconSize: this.markerIconSize});
             this.markers().forEach(function(markerData) {
                 var currentMarker = [markerData.latitude, markerData.longitude];
-                var marker = L.marker(currentMarker).addTo(this.map);
+                var marker = L.marker(currentMarker, {icon: icon}).addTo(this.map);
                 marker.on('click', function() {
                     this.selectMarker(markerData);
                 }.bind(this));
