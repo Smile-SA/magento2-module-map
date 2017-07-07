@@ -15,6 +15,7 @@ namespace Smile\Map\Model;
 
 use Smile\Map\Api\Data\AddressInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\App\CacheInterface;
 
 /**
  * Address formatter tool.
@@ -71,23 +72,36 @@ class AddressFormatter
     private $filterManager;
 
     /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    private $cacheInterface;
+
+    /**
+     * @var array
+     */
+    private $localCache = [];
+
+    /**
      * Constructor.
      *
-     * @param \Magento\Framework\Filter\FilterManager                    $filterManager Filter manager used to render address templates.
-     * @param \Magento\Store\Model\StoreManagerInterface                 $storeManager  Store manager.
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface         $scopeConfig   Store configuration
-     * @param \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo   Country info.
+     * @param \Magento\Framework\Filter\FilterManager                    $filterManager  Filter manager used to render address templates.
+     * @param \Magento\Store\Model\StoreManagerInterface                 $storeManager   Store manager.
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface         $scopeConfig    Store configuration
+     * @param \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo    Country info.
+     * @param \Magento\Framework\App\CacheInterface                      $cacheInterface Cache Interface.
      */
     public function __construct(
         \Magento\Framework\Filter\FilterManager $filterManager,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo
+        \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo,
+        \Magento\Framework\App\CacheInterface $cacheInterface
     ) {
-        $this->filterManager = $filterManager;
-        $this->storeManager  = $storeManager;
-        $this->scopeConfig   = $scopeConfig;
-        $this->countryInfo   = $countryInfo;
+        $this->filterManager  = $filterManager;
+        $this->storeManager   = $storeManager;
+        $this->scopeConfig    = $scopeConfig;
+        $this->countryInfo    = $countryInfo;
+        $this->cacheInterface = $cacheInterface;
     }
 
     /**
@@ -132,9 +146,8 @@ class AddressFormatter
         }
 
         if ($address->getCountryId()) {
-            $countryId   = $address->getCountryId();
-            $countryInfo = $this->countryInfo->getCountryInfo($countryId);
-            $variables['country'] = $countryInfo->getFullNameLocale();
+            $countryId            = $address->getCountryId();
+            $variables['country'] = $this->getCountryFullName($countryId);
         }
 
         return $variables;
@@ -153,5 +166,44 @@ class AddressFormatter
         $path = self::FORMAT_XML_BASE_XPATH . '/' . $format;
 
         return $this->scopeConfig->getValue($path, ScopeInterface::SCOPE_STORE, $storeId);
+    }
+
+    /**
+     * Retrieve Country name for current locale, from local cache if possible, or from previous calculation.
+     * This is mainly due to the fact that calling CountryInformationAcquirerInterface::getCountryInfo processes a full
+     * loading of directory data, without using any cache.
+     *
+     * @param string $countryId The Country Id
+     *
+     * @return mixed
+     */
+    private function getCountryFullName($countryId)
+    {
+        $store = $this->storeManager->getStore();
+        $storeLocale = $this->scopeConfig->getValue(
+            'general/locale/code',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORES,
+            $store->getCode()
+        );
+
+        $cacheKey = sprintf("%s_%s_%s", $countryId, $store->getId(), $storeLocale);
+
+        if (!isset($this->localCache[$cacheKey])) {
+            $data = $this->cacheInterface->load($cacheKey);
+
+            if (!$data) {
+                $data = $this->countryInfo->getCountryInfo($countryId)->getFullNameLocale();
+                $this->cacheInterface->save(
+                    $data,
+                    $cacheKey,
+                    [\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER],
+                    7200
+                );
+            }
+
+            $this->localCache[$cacheKey] = $data;
+        }
+
+        return $this->localCache[$cacheKey];
     }
 }
