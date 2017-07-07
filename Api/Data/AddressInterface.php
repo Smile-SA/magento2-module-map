@@ -56,7 +56,7 @@ interface AddressInterface
     /**
      * Get street.
      *
-     * @return string[]|null
+     * @return string[]|string|null
      */
     public function getStreet();
 
@@ -104,11 +104,11 @@ interface AddressInterface
     /**
      * Set street.
      *
-     * @param string[] $street Street.
+     * @param string[]|string $street Street.
      *
      * @return $this
      */
-    public function setStreet(array $street);
+    public function setStreet($street);
 
     /**
      * Set postcode.

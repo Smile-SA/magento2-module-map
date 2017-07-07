@@ -55,7 +55,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getStreet()
     {
-        return $this->getData(self::STREET);
+        return is_array($this->getData(self::STREET)) ? $this->getData(self::STREET) : [$this->getData(self::STREET)];
     }
 
     /**
@@ -109,7 +109,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setStreet(array $street)
+    public function setStreet($street)
     {
         return $this->setData(self::STREET, $street);
     }
