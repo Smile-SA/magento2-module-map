@@ -45,4 +45,11 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Smile\Map\Model\AddressFormatter">
+        <arguments>
+            <!-- Override country info acquirer for find information even if it is not in the list of authorized countries -->
+            <argument name="countryInfo" xsi:type="object">Smile\Map\Model\CountryInformationAcquirer</argument>
+        </arguments>
+    </type>
 </config>
