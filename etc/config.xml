@@ -27,6 +27,9 @@
                 <provider_google_type>roadmap</provider_google_type>
                 <provider_google_libraries>geometry</provider_google_libraries>
                 <provider_google_direction_url_template>https://www.google.com/maps/dir/{{depend has_origin}}{{var orig_latitude}},{{var orig_longitude}}{{/depend}}/{{var dest_latitude}},{{var dest_longitude}}</provider_google_direction_url_template>
+
+                <provider_all_disabled_zoom_out>0</provider_all_disabled_zoom_out>
+                <provider_all_marker_cluster>0</provider_all_marker_cluster>
             </map>
 
             <address_templates>
