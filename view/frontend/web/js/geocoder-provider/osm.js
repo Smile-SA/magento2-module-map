@@ -11,11 +11,9 @@ define(['jquery', 'leaflet'], function ($, L) {
             + L.Util.getParamString(parameters);
     }
 
-    function getGeolocalizeApi() {
-        return '//freegeoip.net/json/?callback=?';
+    function getGeolocalizeApi(config) {
+        return '//api.ipstack.com/check?output=json&fields=latitude,longitude&access_key='+ config['api_key'];
     }
-
-    var geocoder = null;
 
     /**
      * Geocoder constructor
@@ -98,7 +96,7 @@ define(['jquery', 'leaflet'], function ($, L) {
      * @param callback
      */
     Geocoder.prototype.geoLocalizeViaApi = function (callback) {
-        $.getJSON(getGeolocalizeApi(), function(success) {callback({coords: {latitude: success.latitude, longitude: success.longitude}})});
+        $.getJSON(getGeolocalizeApi(this.options), function(success) {callback({coords: {latitude: success.latitude, longitude: success.longitude}})});
     };
 
     /**
