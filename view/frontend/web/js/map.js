@@ -5,7 +5,8 @@ define([
     'ko',
     'uiRegistry',
     'smile-map-markers',
-    'mage/translate'
+    'mage/translate',
+    'leaflet-markercluster'
 ], function ($, Component, L, ko, registry, MarkersList) {
     return Component.extend({
         defaults: {
@@ -32,10 +33,6 @@ define([
         initMarkers: function() {
             var markersList = new MarkersList({items : this.markers});
             this.markers = markersList.getList();
-
-            this.markers.forEach(function(marker) {
-                marker.distance = ko.observable(0);
-            });
 
             this.markers.forEach(function(marker) {
                 marker.distance = ko.observable(0);
@@ -178,11 +175,15 @@ define([
          * Load the markers and centers the map on them.
          */
         loadMarkers: function() {
-            var markers = [];
+            var markers = [],
+                isMarkerCluster = this.marker_cluster === '1';
             var icon = L.icon({iconUrl: this.markerIcon, iconSize: this.markerIconSize});
             this.markers().forEach(function(markerData) {
                 var currentMarker = [markerData.latitude, markerData.longitude];
-                var marker = L.marker(currentMarker, {icon: icon}).addTo(this.map);
+                var marker = L.marker(currentMarker, {icon: icon});
+                if (!isMarkerCluster) {
+                    marker.addTo(this.map);
+                }
                 marker.on('click', function() {
                     this.selectMarker(markerData);
                 }.bind(this));
@@ -190,6 +191,11 @@ define([
             }.bind(this));
 
             var group = new L.featureGroup(markers);
+            if (isMarkerCluster) {
+                group = new L.markerClusterGroup();
+                group.addLayers(markers);
+                this.map.addLayer(group);
+            }
             this.initialBounds = group.getBounds();
         },
 
@@ -250,7 +256,7 @@ define([
 
             var zoom = this.map.getZoom();
 
-            if (displayedMarkers.length === 0) {
+            if (displayedMarkers.length === 0 && this.disabled_zoom_out !== '1') {
                 zoom = zoom - 1;
                 this.map.setZoom(zoom);
             }

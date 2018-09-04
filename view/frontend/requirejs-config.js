@@ -30,6 +30,7 @@ var config = {
         'leaflet-geosearch'         : 'Smile_Map/leaflet/plugins/geosearch/l.control.geosearch',
         'leaflet-geosearch-osm'     : 'Smile_Map/leaflet/plugins/geosearch/l.geosearch.provider.openstreetmap',
         'leaflet-geosearch-google'  : 'Smile_Map/leaflet/plugins/geosearch/l.geosearch.provider.google',
+        'leaflet-markercluster'     : 'Smile_Map/leaflet/plugins/markercluster/leaflet.markercluster',
         'google-mutant'             : 'Smile_Map/leaflet/google-mutant'
     },
     shim: {
@@ -44,6 +45,9 @@ var config = {
         },
         'leaflet-geosearch-google': {
             deps: ['leaflet', 'leaflet-geosearch']
+        },
+        'leaflet-markercluster': {
+            deps: ['leaflet']
         },
         'google-mutant': {
             deps: ['leaflet']
