@@ -63,9 +63,9 @@ class CountryInformationAcquirer extends \Magento\Directory\Model\CountryInforma
             $store->getCode()
         );
 
-        $countriesCollection = $this->countryCollection->addCountryIdFilter($countryId);
+        $countriesCollection = $this->countryCollection->load();
         $regions = $this->directoryHelper->getRegionData();
-        $country = $countriesCollection->getFirstItem();
+        $country = $countriesCollection->getItemById($countryId);
 
         if (!$country || !$country->getId()) {
             throw new NoSuchEntityException(
