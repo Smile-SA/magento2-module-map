@@ -133,6 +133,7 @@ define([
                 if (isMarker) {
                     this.currentBounds = this.initialBounds;
                     this.selectedMarker(isMarker);
+                    this.refreshNearByMarkers(new L.latLng(isMarker.latitude, isMarker.longitude), true);
                     this.map.setView(coords, 15);
                 } else {
                     this.map.setView(coords, 11);
@@ -222,11 +223,6 @@ define([
             this.refreshNearByMarkers(coords);
             this.setHashFromLocation({coords : marker});
 
-            // Remove current markers from nearby markers
-            var nearbyMarkers = this.nearbyMarkers();
-            nearbyMarkers.shift();
-            this.nearbyMarkers(nearbyMarkers);
-
             this.map.setView(coords, 15);
         },
 
@@ -234,15 +230,21 @@ define([
          * Retrieve a list of markers nearby given coordinates
          *
          * @param coords
+         * @param removeFirstMarker
          */
-        refreshNearByMarkers: function(coords) {
+        refreshNearByMarkers: function(coords, removeFirstMarker) {
+            removeFirstMarker = typeof removeFirstMarker === 'undefined' ? false : removeFirstMarker;
             if (this.geocoder) {
                 var nearbyMarkers = this.geocoder.filterMarkersListByPositionRadius(this.markers(), coords);
                 nearbyMarkers = nearbyMarkers.sort(function(a, b) {
-                    var distanceA = a['distance']; var distanceB = b['distance'];
+                    var distanceA = ko.isObservable(a['distance']) ? a['distance']() : a['distance'],
+                        distanceB = ko.isObservable(b['distance']) ? b['distance']() : b['distance'];
                     return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
                 });
 
+                if (removeFirstMarker) {
+                    nearbyMarkers.shift();
+                }
                 this.nearbyMarkers(nearbyMarkers);
             }
         },
