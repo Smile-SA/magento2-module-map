@@ -86,11 +86,11 @@ interface AddressInterface
     /**
      * Set region.
      *
-     * @param \Magento\Customer\Api\Data\RegionInterface $region Region.
+     * @param string $region Region.
      *
      * @return $this
      */
-    public function setRegion(\Magento\Customer\Api\Data\RegionInterface $region = null);
+    public function setRegion($region = null);
 
     /**
      * Set region ID.

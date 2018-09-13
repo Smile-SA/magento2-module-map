@@ -93,7 +93,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setRegion(\Magento\Customer\Api\Data\RegionInterface $region = null)
+    public function setRegion($region = null)
     {
         return $this->setData(self::REGION, $region);
     }
