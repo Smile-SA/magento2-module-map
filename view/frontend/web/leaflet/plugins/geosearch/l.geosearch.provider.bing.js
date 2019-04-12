@@ -19,7 +19,7 @@ L.GeoSearch.Provider.Bing = L.Class.extend({
             jsonp: 'parseLocation'
         }, this.options);
 
-        return 'http://dev.virtualearth.net/REST/v1/Locations'
+        return 'https://dev.virtualearth.net/REST/v1/Locations'
             + L.Util.getParamString(parameters);
     },
 

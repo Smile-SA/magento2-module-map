@@ -19,8 +19,7 @@ L.GeoSearch.Provider.Esri = L.Class.extend({
             f: 'pjson'
         }, this.options);
 
-        return (location.protocol === 'https:' ? 'https:' : 'http:')
-            + '//geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find'
+        return 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/find'
             + L.Util.getParamString(parameters);
     },
 
