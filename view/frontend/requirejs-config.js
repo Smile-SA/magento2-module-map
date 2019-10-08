@@ -22,7 +22,9 @@ var config = {
             'smile-map-provider-google'      : 'Smile_Map/js/map-provider/google-maps',
             'smile-geocoder'                 : 'Smile_Map/js/geocoder',
             'smile-geocoder-provider-osm'    : 'Smile_Map/js/geocoder-provider/osm',
-            'smile-geocoder-provider-google' : 'Smile_Map/js/geocoder-provider/google'
+            'smile-geocoder-provider-google' : 'Smile_Map/js/geocoder-provider/google',
+            'listItemEvent'                  : 'Smile_Map/js/listItemEvent',
+            'mapMobile'                      : 'Smile_Map/js/mapMobile'
         }
     },
     paths: {
