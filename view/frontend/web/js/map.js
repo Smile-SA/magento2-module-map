@@ -33,13 +33,11 @@ define([
         initMarkers: function() {
             var markersList = new MarkersList({items : this.markers});
             this.markers = markersList.getList();
-
             this.markers.forEach(function(marker) {
                 marker.distance = ko.observable(0);
                 marker.distanceBetween = ko.observable(0);
                 marker.shopStatus = ko.observable(0);
             });
-
             this.displayedMarkers = ko.observable(this.markers);
         },
 
@@ -242,7 +240,6 @@ define([
                 markers.push(marker);
                 markerData.shopStatus(this.prepareShopStatus(markerData));
             }.bind(this));
-
             var group = new L.featureGroup(markers);
             if (isMarkerCluster) {
                 group = new L.markerClusterGroup();
@@ -261,7 +258,6 @@ define([
             var schedule = markerData.getSchedule();
             var isOpen = schedule.isOpenToday();
             var statusClass;
-            var day;
             if(!isOpen) {
                 isOpen = 'Closed';
                 statusClass = 'close-shop';
@@ -306,7 +302,8 @@ define([
             var coords = new L.latLng(marker.latitude, marker.longitude);
             this.refreshNearByMarkers(coords);
             this.setHashFromLocation({coords : marker});
-            this.map.setView(coords, 17);
+            this.map.setView(coords, 18);
+            
         },
 
         /**
@@ -331,7 +328,6 @@ define([
                 this.nearbyMarkers(nearbyMarkers);
             }
         },
-
         /**
          * Refresh markers according to current bounds.
          */

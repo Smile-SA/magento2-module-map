@@ -24,7 +24,9 @@ var config = {
             'smile-geocoder-provider-osm'    : 'Smile_Map/js/geocoder-provider/osm',
             'smile-geocoder-provider-google' : 'Smile_Map/js/geocoder-provider/google',
             'listItemEvent'                  : 'Smile_Map/js/listItemEvent',
-            'mapMobile'                      : 'Smile_Map/js/mapMobile'
+            'mapMobile'                      : 'Smile_Map/js/mapMobile',
+            'slick'                          : 'Smile_Map/js/lib/slick.min',
+            'promotionSlider'                : 'Smile_Map/js/promotionSlider'
         }
     },
     paths: {
