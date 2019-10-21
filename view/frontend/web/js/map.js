@@ -350,6 +350,10 @@ define([
                 return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
             });
 
+            if(displayedMarkers.length < 2 ) {
+                displayedMarkers.shift();
+            }
+
             this.displayedMarkers(displayedMarkers);
         },
 
@@ -493,6 +497,12 @@ define([
                 }
                 markerd = L.marker(coords, {icon: markerOpt}).addTo(this.map);
             }
+        },
+
+        closeDetails: function () {
+            this.resetBounds();
+            this.resetSelectedMarker();
+            this.geolocalize();
         }
     });
 });
