@@ -33,11 +33,11 @@ define([
         initMarkers: function() {
             var markersList = new MarkersList({items : this.markers});
             this.markers = markersList.getList();
-
             this.markers.forEach(function(marker) {
                 marker.distance = ko.observable(0);
+                marker.distanceBetween = ko.observable(0);
+                marker.shopStatus = ko.observable(0);
             });
-
             this.displayedMarkers = ko.observable(this.markers);
         },
 
@@ -45,7 +45,15 @@ define([
          * Observe events on elements
          */
         observeElements: function() {
-            this.observe(['markers', 'displayedMarkers', 'nearbyMarkers', 'selectedMarker', 'fulltextSearch']);
+            this.observe([
+                'markers',
+                'displayedMarkers',
+                'nearbyMarkers',
+                'selectedMarker',
+                'fulltextSearch',
+                'distanceBetween',
+                'shopStatus'
+            ]);
             this.markers.subscribe(this.loadMarkers.bind(this));
         },
 
@@ -134,14 +142,50 @@ define([
                     this.currentBounds = this.initialBounds;
                     this.selectedMarker(isMarker);
                     this.refreshNearByMarkers(new L.latLng(isMarker.latitude, isMarker.longitude), true);
-                    this.map.setView(coords, 15);
+                    this.map.setView(coords, 14);
                 } else {
-                    this.map.setView(coords, 11);
+                    this.map.setView(coords, 14);
                     this.currentBounds = this.map.getBounds();
                 }
 
                 this.setHashFromLocation(position);
+                this.addMarkerWithMyPosition(position);
+                this.applyDistanceBetween(position);
             }
+        },
+        /**
+         * Add distance from position to marker
+         *
+         * @param position
+         */
+        applyDistanceBetween: function (position) {
+            var newLat = position.coords.latitude;
+            var newLon = position.coords.longitude;
+            var coords = new L.latLng(newLat, newLon);
+            this.changeDisplayList(this.markers(), coords);
+            this.markers().forEach(function (marker) {
+                var itemPosition = new L.LatLng(marker.latitude, marker.longitude);
+                var distanceFromCoords = itemPosition.distanceTo(coords);
+                var result = (distanceFromCoords / 1000).toFixed(1);
+                if(result === '0.0') {
+                    result = (distanceFromCoords / 1000).toFixed(3) + ' m';
+                } else {
+                    result = (distanceFromCoords / 1000).toFixed(1) + ' km';
+                }
+                marker.distanceBetween(result);
+            });
+        },
+
+        changeDisplayList: function (markers, bounds) {
+            if (this.geocoder) {
+                var nearbyMarkers = this.geocoder.filterMarkersListByPositionRadius(this.markers(), bounds);
+                nearbyMarkers = nearbyMarkers.sort(function(a, b) {
+                    var distanceA = ko.isObservable(a['distance']) ? a['distance']() : a['distance'],
+                        distanceB = ko.isObservable(b['distance']) ? b['distance']() : b['distance'];
+                    return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
+                });
+            }
+            this.displayedMarkers(nearbyMarkers);
         },
 
         /**
@@ -181,16 +225,21 @@ define([
             var icon = L.icon({iconUrl: this.markerIcon, iconSize: this.markerIconSize});
             this.markers().forEach(function(markerData) {
                 var currentMarker = [markerData.latitude, markerData.longitude];
-                var marker = L.marker(currentMarker, {icon: icon});
+                var markerOptionLocator = L.divIcon({
+                    iconSize: null,
+                    html: '<div class="custum-lf-popup" data-lat="'+ markerData.latitude +'" data-lon="'+ markerData.longitude +'" data-n="'+ markerData.name +'"><span>'+ markerData.id +'</span><div class="button-decor"></div></div>'
+                });
+                var marker = L.marker(currentMarker, {icon: markerOptionLocator});
                 if (!isMarkerCluster) {
                     marker.addTo(this.map);
                 }
                 marker.on('click', function() {
                     this.selectMarker(markerData);
                 }.bind(this));
-                markers.push(marker);
-            }.bind(this));
 
+                markers.push(marker);
+                markerData.shopStatus(this.prepareShopStatus(markerData));
+            }.bind(this));
             var group = new L.featureGroup(markers);
             if (isMarkerCluster) {
                 group = new L.markerClusterGroup();
@@ -198,6 +247,37 @@ define([
                 this.map.addLayer(group);
             }
             this.initialBounds = group.getBounds();
+        },
+
+
+        /**
+         * Add status of store to the list
+         * @param markerData
+         */
+        prepareShopStatus: function (markerData) {
+            var schedule = markerData.getSchedule();
+            var isOpen = schedule.isOpenToday();
+            var statusClass;
+            if(!isOpen) {
+                isOpen = 'Closed';
+                statusClass = 'close-shop';
+            } else {
+                isOpen = 'Open';
+                statusClass = 'open-shop';
+            }
+            var time = schedule.getTodayCloseTime(isOpen);
+            if(time === 'closeNow') {
+                isOpen = 'closeNow';
+                statusClass = 'close-shop';
+                time = schedule.getTodayCloseTime(isOpen);
+                isOpen = 'Closed';
+            }
+            var openDay = schedule.getDayWhenStoreOpen();
+            if (!openDay) {
+                openDay = '';
+            }
+            var html = '<span class="'+ statusClass +'">'+ isOpen +'</span> - today until <span>'+ time +'</span><span>'+ openDay +'</span>';
+            return html;
         },
 
         /**
@@ -222,8 +302,8 @@ define([
             var coords = new L.latLng(marker.latitude, marker.longitude);
             this.refreshNearByMarkers(coords);
             this.setHashFromLocation({coords : marker});
-
-            this.map.setView(coords, 15);
+            this.map.setView(coords, 18);
+            
         },
 
         /**
@@ -248,7 +328,6 @@ define([
                 this.nearbyMarkers(nearbyMarkers);
             }
         },
-
         /**
          * Refresh markers according to current bounds.
          */
@@ -263,7 +342,17 @@ define([
                 this.map.setZoom(zoom);
             }
 
-            displayedMarkers = this.addDistanceToMarkers(displayedMarkers, this.map.getCenter());
+            // displayedMarkers = this.addDistanceToMarkers(displayedMarkers, this.map.getCenter());
+
+            displayedMarkers = displayedMarkers.sort(function(a, b) {
+                var distanceA = ko.isObservable(a['distance']) ? a['distance']() : a['distance'],
+                    distanceB = ko.isObservable(b['distance']) ? b['distance']() : b['distance'];
+                return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
+            });
+
+            if(displayedMarkers.length < 2 ) {
+                displayedMarkers.shift();
+            }
 
             this.displayedMarkers(displayedMarkers);
         },
@@ -389,6 +478,31 @@ define([
             } else {
                 return markersList;
             }
+        },
+
+        addMarkerWithMyPosition: function (position) {
+            if (position && position.coords) {
+                var positionMe = position;
+                var markerd;
+                var newLat = position.coords.latitude;
+                var newLon = position.coords.longitude;
+                var coords = new L.latLng(newLat, newLon);
+                var markerOpt = L.divIcon({
+                    iconSize: null,
+                    html: '<div class="custum-lf-popup position my-position" data-lat="'+ newLat +'" data-lon="'+ newLon +'"><div class="button-decor"></div></div>'
+                });
+
+                if($('.position').length > 0) {
+                    $('.position').parent().remove();
+                }
+                markerd = L.marker(coords, {icon: markerOpt}).addTo(this.map);
+            }
+        },
+
+        closeDetails: function () {
+            this.resetBounds();
+            this.resetSelectedMarker();
+            this.geolocalize();
         }
     });
 });
