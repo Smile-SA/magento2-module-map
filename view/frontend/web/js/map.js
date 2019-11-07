@@ -128,7 +128,9 @@ define([
          * @param position
          */
         applyPosition: function(position) {
-            if (position && position.coords) {
+            if( position === undefined || position.coords.longitude === undefined ) {
+                this.displayedMarkers(this.markers());
+            } else {
                 var coords = new L.latLng(position.coords.latitude, position.coords.longitude);
 
                 var isMarker = false;
@@ -149,6 +151,16 @@ define([
                 }
 
                 this.setHashFromLocation(position);
+            }
+        },
+        /**
+         * Show user position and distance to each displayed markers,
+         * if geolocation is 'true'
+         *
+         * @param position
+         */
+        displayPositionAndDistance: function(position) {
+            if(position.coords.longitude != undefined) {
                 this.addMarkerWithMyPosition(position);
                 this.applyDistanceBetween(position);
             }
@@ -175,7 +187,12 @@ define([
                 marker.distanceBetween(result);
             });
         },
-
+        /**
+         * Change list markers relatively to position of user
+         *
+         * @param markers
+         * @param bounds
+         */
         changeDisplayList: function (markers, bounds) {
             if (this.geocoder) {
                 var nearbyMarkers = this.geocoder.filterMarkersListByPositionRadius(this.markers(), bounds);
@@ -194,6 +211,7 @@ define([
         geolocalize: function() {
             if (this.geocoder) {
                 this.geocoder.geolocalize(this.applyPosition.bind(this));
+                this.geocoder.geolocalize(this.displayPositionAndDistance.bind(this));
             }
         },
 
@@ -203,7 +221,6 @@ define([
         initGeocoderBinding: function() {
             registry.get(this.name + '.geocoder', function (geocoder) {
                 this.geocoder = geocoder;
-
                 geocoder.currentResult.subscribe(function (result) {
                     if (result && result.bounds) {
                         this.map.setView(result.location, 11);
@@ -350,11 +367,14 @@ define([
                 return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
             });
 
-            if(displayedMarkers.length < 2 ) {
-                displayedMarkers.shift();
+
+            var position = this.getLocationFromHash();
+            if( position === undefined || position.coords.longitude === undefined ) {
+                this.displayedMarkers(this.markers());
+            } else {
+                this.displayedMarkers(displayedMarkers);
             }
 
-            this.displayedMarkers(displayedMarkers);
         },
 
         /**
@@ -479,7 +499,11 @@ define([
                 return markersList;
             }
         },
-
+        /**
+         * Add marker with user position to the map
+         *
+         * @param position
+         */
         addMarkerWithMyPosition: function (position) {
             if (position && position.coords) {
                 var positionMe = position;
@@ -498,10 +522,12 @@ define([
                 markerd = L.marker(coords, {icon: markerOpt}).addTo(this.map);
             }
         },
-
+        /**
+         * Close view store details
+         */
         closeDetails: function () {
-            this.resetBounds();
             this.resetSelectedMarker();
+            this.resetBounds();
             this.geolocalize();
         }
     });
