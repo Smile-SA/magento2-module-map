@@ -15,8 +15,9 @@
 define([
     'jquery',
     'uiComponent',
+    'uiRegistry',
     'mage/translate'
-], function ($, Component) {
+], function ($, Component, registry) {
     return Component.extend({
         defaults: {
             provider: "osm",
@@ -83,6 +84,9 @@ define([
         filterMarkersListByPositionRadius: function(markersList, centerPosition, radius) {
             if (!radius) {
                 radius = parseInt(this.radius, 10);
+            }
+            if (this.geocoder == undefined && typeof this.provider === 'object') {
+                this.geocoder = this.provider.getGeocoder();
             }
             return this.geocoder.filterMarkersListByPositionRadius(markersList, centerPosition, radius)
         },
