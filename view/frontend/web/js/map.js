@@ -4,10 +4,11 @@ define([
     'leaflet',
     'ko',
     'uiRegistry',
-    'smile-map-markers',
+    'smile-storelocator-store-collection',
+    'Smile_StoreLocator/js/model/store/schedule',
     'mage/translate',
     'leaflet-markercluster'
-], function ($, Component, L, ko, registry, MarkersList) {
+], function ($, Component, L, ko, registry, MarkersList, Schedule) {
     return Component.extend({
         defaults: {
            provider : "osm",
@@ -37,7 +38,16 @@ define([
                 marker.distance = ko.observable(0);
                 marker.distanceBetween = ko.observable(0);
                 marker.shopStatus = ko.observable(0);
+                marker.closestShopsDisplay = ko.observable();
             });
+
+            if(this.markers[0] && this.markers[0].closestShops) {
+                this.markers[0].closestShops.forEach(function (marker) {
+                     marker.distance = ko.observable(0);
+                     marker.shopStatus = ko.observable(0);
+                     marker.shopStatus = ko.observable(0);
+                });
+            }
             this.displayedMarkers = ko.observable(this.markers);
         },
 
@@ -52,7 +62,8 @@ define([
                 'selectedMarker',
                 'fulltextSearch',
                 'distanceBetween',
-                'shopStatus'
+                'shopStatus',
+                'closestShopsDisplay'
             ]);
             this.markers.subscribe(this.loadMarkers.bind(this));
         },
@@ -188,7 +199,7 @@ define([
             });
         },
         /**
-         * Change list markers relatively to position of user
+         * Change list markers relatively to position
          *
          * @param markers
          * @param bounds
@@ -242,17 +253,20 @@ define([
             var icon = L.icon({iconUrl: this.markerIcon, iconSize: this.markerIconSize});
             this.markers().forEach(function(markerData) {
                 var currentMarker = [markerData.latitude, markerData.longitude];
+                var currentNameMarker;
+                if (markerData.id === undefined ) {
+                    currentNameMarker = ' ';
+                } else {
+                    currentNameMarker = markerData.id;
+                }
                 var markerOptionLocator = L.divIcon({
                     iconSize: null,
-                    html: '<div class="custum-lf-popup" data-lat="'+ markerData.latitude +'" data-lon="'+ markerData.longitude +'" data-n="'+ markerData.name +'"><span>'+ markerData.id +'</span><div class="button-decor"></div></div>'
+                    html: '<div class="custum-lf-popup" data-lat="'+ markerData.latitude +'" data-lon="'+ markerData.longitude +'" data-n="'+ markerData.name +'"><span>'+ currentNameMarker +'</span><div class="button-decor"></div><a href="'+ markerData.url +'" </div>'
                 });
                 var marker = L.marker(currentMarker, {icon: markerOptionLocator});
                 if (!isMarkerCluster) {
                     marker.addTo(this.map);
                 }
-                marker.on('click', function() {
-                    this.selectMarker(markerData);
-                }.bind(this));
 
                 markers.push(marker);
                 markerData.shopStatus(this.prepareShopStatus(markerData));
@@ -266,13 +280,18 @@ define([
             this.initialBounds = group.getBounds();
         },
 
-
         /**
-         * Add status of store to the list
+         * Show the current status of shop
+         *
          * @param markerData
+         * @returns {string}
          */
         prepareShopStatus: function (markerData) {
-            var schedule = markerData.getSchedule();
+            if(!markerData.nerby) {
+                var schedule = markerData.getSchedule();
+            } else {
+                var schedule = markerData.schedule;
+            }
             var isOpen = schedule.isOpenToday();
             var statusClass;
             if(!isOpen) {
@@ -367,14 +386,14 @@ define([
                 return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
             });
 
-
             var position = this.getLocationFromHash();
-            if( position === undefined || position.coords.longitude === undefined ) {
+            if(position === null) {
+                this.displayedMarkers(displayedMarkers);
+            } else if ( position === undefined || position.coords.longitude === undefined ) {
                 this.displayedMarkers(this.markers());
             } else {
                 this.displayedMarkers(displayedMarkers);
             }
-
         },
 
         /**
@@ -529,6 +548,36 @@ define([
             this.resetSelectedMarker();
             this.resetBounds();
             this.geolocalize();
+        },
+
+        /**
+         * Function for store-view-page.
+         * For display closest shops to the current shop
+         */
+        closestShopDisplayRender: function () {
+            var self = this;
+            var lat = this.displayedMarkers()[0].latitude;
+            var lon = this.displayedMarkers()[0].longitude;
+            var bounds =  new L.latLng(lat, lon);
+            var markers = this.displayedMarkers()[0].closestShops;
+            if (this.geocoder) {
+                var nearbyMarkers = this.geocoder.filterMarkersListByPositionRadius(markers, bounds);
+                nearbyMarkers = nearbyMarkers.sort(function(a, b) {
+                    var distanceA = ko.isObservable(a['distance']) ? a['distance']() : a['distance'],
+                        distanceB = ko.isObservable(b['distance']) ? b['distance']() : b['distance'];
+                    return ((distanceA < distanceB) ? - 1 : ((distanceA > distanceB) ? 1 : 0));
+                });
+            }
+            nearbyMarkers.shift(0);
+            if (nearbyMarkers.length > 3 ) {
+                nearbyMarkers = nearbyMarkers.slice(0, 3);
+            }
+            nearbyMarkers.forEach(function (markerData) {
+                markerData.schedule = new Schedule(markerData.schedule);
+                markerData.nerby =  'nearby-shop';
+                markerData.shopStatus(self.prepareShopStatus(markerData));
+            });
+            this.closestShopsDisplay(nearbyMarkers);
         }
     });
 });
