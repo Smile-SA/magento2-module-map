@@ -29,6 +29,15 @@ var config = {
             'promotionSlider'                : 'Smile_Map/js/promotionSlider'
         }
     },
+    config: {
+        mixins: {
+            'mage/menu': {
+                'Smile_Map/js/lib/mage/menu-mixin': true
+            }
+        }
+    },
+
+
     paths: {
         'leaflet'                   : 'Smile_Map/leaflet/leaflet',
         'leaflet-geosearch'         : 'Smile_Map/leaflet/plugins/geosearch/l.control.geosearch',
