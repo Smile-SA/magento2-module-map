@@ -6,6 +6,7 @@ define([
     'uiRegistry',
     'smile-storelocator-store-collection',
     'Smile_StoreLocator/js/model/store/schedule',
+    'jquery/ui',
     'mage/translate',
     'leaflet-markercluster'
 ], function ($, Component, L, ko, registry, MarkersList, Schedule) {
@@ -578,6 +579,90 @@ define([
                 markerData.shopStatus(self.prepareShopStatus(markerData));
             });
             this.closestShopsDisplay(nearbyMarkers);
+        },
+
+        /**
+         * Locate the map to current target.
+         * Target = place name || postcode || city.
+         */
+        searchCurrentPlaces: function () {
+            var coords, cityTarget, resultMarker;
+            var resultArray = [];
+            var searchTarget = $('#searchMarker').val();
+            var nameRequest = parseInt(searchTarget.replace( /\D/g, '')) || 0;
+            searchTarget = searchTarget.toLowerCase();
+            searchTarget = searchTarget.trim();
+            this.markers().forEach(function (marker) {
+                var name = marker.name;
+                var postCode = marker.postCode;
+                var city = marker.city;
+                var positionLan = marker.latitude;
+                var positionLon = marker.longitude;
+                name = name.toLowerCase();
+                name = name.trim();
+                city = city.toLowerCase();
+                city = city.trim();
+                if(searchTarget === name || searchTarget === postCode || searchTarget === city || searchTarget === name + ', ' + city) {
+                    coords = new L.latLng(positionLan, positionLon);
+                    if( searchTarget === city) {
+                        cityTarget = city;
+                    }
+                    if(searchTarget === name + ', ' + city) {
+                        resultMarker = marker;
+                    }
+                }
+            });
+            if(coords != undefined && nameRequest === 0 && cityTarget === undefined) {
+                this.map.setView(coords, 17);
+                resultArray.push(resultMarker);
+                this.displayedMarkers(resultArray);
+            } else if (coords === undefined) {
+                alert('wrong required');
+            } else {
+                this.map.setView(coords, 12);
+            }
+        },
+
+        /**
+         * Create list for autocomplete in search field for markers.
+         * @returns {[]}
+         */
+        markerAutocompleteBase: function () {
+            var titlesListArr = [];
+            this.markers().forEach(function (marker) {
+                var name = marker.name;
+                name = name.trim();
+                var postCode = marker.postCode;
+                var city = marker.city;
+                if(!titlesListArr.includes(name)) {
+                    titlesListArr.push(name + ', ' + city);
+                }
+                if(!titlesListArr.includes(postCode)) {
+                    titlesListArr.push(postCode);
+                }
+                if(!titlesListArr.includes(city)) {
+                    titlesListArr.push(city);
+                }
+            });
+            return titlesListArr;
+        },
+
+        /**
+         * Map search.
+         */
+        markerAutocompleteSearch: function () {
+            var parrent = $('.shop-search .fulltext-search-wrapper .ui-widget');
+            var markerInfoBase =  this.markerAutocompleteBase();
+            $('#searchMarker').autocomplete({
+                appendTo: parrent,
+                minLength: 3,
+                position: {
+                    my: "left top",
+                    at: "left bottom",
+                    collision: "none"
+                },
+                source: markerInfoBase
+            });
         }
     });
 });
