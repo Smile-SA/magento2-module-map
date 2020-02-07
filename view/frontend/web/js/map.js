@@ -254,15 +254,9 @@ define([
             var icon = L.icon({iconUrl: this.markerIcon, iconSize: this.markerIconSize});
             this.markers().forEach(function(markerData) {
                 var currentMarker = [markerData.latitude, markerData.longitude];
-                var currentNameMarker;
-                if (markerData.id === undefined ) {
-                    currentNameMarker = ' ';
-                } else {
-                    currentNameMarker = markerData.id;
-                }
                 var markerOptionLocator = L.divIcon({
                     iconSize: null,
-                    html: '<div class="custum-lf-popup" data-lat="'+ markerData.latitude +'" data-lon="'+ markerData.longitude +'" data-n="'+ markerData.name +'"><span>'+ currentNameMarker +'</span><div class="button-decor"></div><a href="'+ markerData.url +'" </div>'
+                    html: '<div class="custum-lf-popup" data-lat="'+ markerData.latitude +'" data-lon="'+ markerData.longitude +'" data-n="'+ markerData.name +'"><div class="button-decor"></div><a href="'+ markerData.url +'" </div>'
                 });
                 var marker = L.marker(currentMarker, {icon: markerOptionLocator});
                 if (!isMarkerCluster) {
