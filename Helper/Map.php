@@ -94,7 +94,7 @@ class Map extends AbstractHelper
         $this->fileStorageHelper = $fileStorageHelper;
         $this->fileSystem        = $fileSystem;
         $this->assetRepository   = $assetRepository;
-        $this->storeManager 	 = $storeManager;
+        $this->storeManager      = $storeManager;
         parent::__construct($context);
     }
 
