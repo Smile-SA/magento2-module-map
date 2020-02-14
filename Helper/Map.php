@@ -75,12 +75,12 @@ class Map extends AbstractHelper
     /**
      * Map constructor.
      *
-     * @param Context        		$context           Application Context
-     * @param LocaleResolver		$localeResolver    Locale Resolver
-     * @param Database      		$fileStorageHelper File Storage Helper
-     * @param Repository    		$assetRepository   Asset Repository
-     * @param Filesystem     		$fileSystem        File System
-     * @param StoreManagerInterface $storeManager	   Store Manager
+     * @param Context               $context           Application Context
+     * @param LocaleResolver        $localeResolver    Locale Resolver
+     * @param Database              $fileStorageHelper File Storage Helper
+     * @param Repository            $assetRepository   Asset Repository
+     * @param Filesystem            $fileSystem        File System
+     * @param StoreManagerInterface $storeManager      Store Manager
      */
     public function __construct(
         Context $context,
@@ -88,13 +88,13 @@ class Map extends AbstractHelper
         Database $fileStorageHelper,
         Repository $assetRepository,
         Filesystem $fileSystem,
-		StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager
     ) {
         $this->localeResolver    = $localeResolver;
         $this->fileStorageHelper = $fileStorageHelper;
         $this->fileSystem        = $fileSystem;
         $this->assetRepository   = $assetRepository;
-		$this->storeManager 	 = $storeManager;
+        $this->storeManager 	 = $storeManager;
         parent::__construct($context);
     }
 
@@ -127,7 +127,7 @@ class Map extends AbstractHelper
             }
         };
 
-		$allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH, 'store', $this->storeManager->getStore()->getCode());
+        $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH, 'store', $this->storeManager->getStore()->getCode());
         
         array_walk($allConfig, $mapKeyFunc);
 
