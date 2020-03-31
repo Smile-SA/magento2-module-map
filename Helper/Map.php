@@ -20,6 +20,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Framework\View\Asset\Repository;
 use Magento\MediaStorage\Helper\File\Storage\Database;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Smile\Map\Model\Config\Backend\MarkerIcon;
 
 /**
@@ -67,25 +68,33 @@ class Map extends AbstractHelper
     private $assetRepository;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+    
+    /**
      * Map constructor.
      *
-     * @param Context        $context           Application Context
-     * @param LocaleResolver $localeResolver    Locale Resolver
-     * @param Database       $fileStorageHelper File Storage Helper
-     * @param Repository     $assetRepository   Asset Repository
-     * @param Filesystem     $fileSystem        File System
+     * @param Context               $context           Application Context
+     * @param LocaleResolver        $localeResolver    Locale Resolver
+     * @param Database              $fileStorageHelper File Storage Helper
+     * @param Repository            $assetRepository   Asset Repository
+     * @param Filesystem            $fileSystem        File System
+     * @param StoreManagerInterface $storeManager      Store Manager
      */
     public function __construct(
         Context $context,
         LocaleResolver $localeResolver,
         Database $fileStorageHelper,
         Repository $assetRepository,
-        Filesystem $fileSystem
+        Filesystem $fileSystem,
+        StoreManagerInterface $storeManager
     ) {
         $this->localeResolver    = $localeResolver;
         $this->fileStorageHelper = $fileStorageHelper;
         $this->fileSystem        = $fileSystem;
         $this->assetRepository   = $assetRepository;
+        $this->storeManager      = $storeManager;
         parent::__construct($context);
     }
 
@@ -118,7 +127,8 @@ class Map extends AbstractHelper
             }
         };
 
-        $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH);
+        $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH, 'store', $this->storeManager->getStore()->getCode());
+        
         array_walk($allConfig, $mapKeyFunc);
 
         if (!isset($config['country'])) {
