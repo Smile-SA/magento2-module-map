@@ -11,7 +11,7 @@ define([
     return Component.extend({
         defaults: {
             provider : "osm",
-            tile_url: "https://{s}.tile.osm.org/{z}/{x}/{y}.png",
+            tile_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             controls_position: 'topright',
             markers : [],
             markerIconSize: [18,23],
