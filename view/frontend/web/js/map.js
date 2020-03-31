@@ -11,7 +11,7 @@ define([
     return Component.extend({
         defaults: {
             provider : "osm",
-            tile_url: "https://{s}.tile.osm.org/{z}/{x}/{y}.png",
+            tile_url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
             controls_position: 'topright',
             markers : [],
             markerIconSize: [18,23],
@@ -56,7 +56,7 @@ define([
          * @param component Component
          */
         initMap: function (element, component) {
-            component.map = L.map(element, {zoomControl: false, attributionControl: false, scrollWheelZoom: $(document).width() > 480});
+            component.map = L.map(element, {zoomControl: false, attributionControl: true, scrollWheelZoom: $(document).width() > 480});
             component.map.on('moveend', component.refreshDisplayedMarkers.bind(component));
 
             layerControl = L.control.zoom({position: component['controls_position']});
