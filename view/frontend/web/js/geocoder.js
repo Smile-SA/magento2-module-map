@@ -58,8 +58,10 @@ define([
 
         /**
          * Trigger the geocoding on search. Exposes current result then.
+         *
+         * @param {function} noResultCallback
          */
-        onSearch: function() {
+        onSearch: function(noResultCallback) {
             if (!this.fulltextSearch() || this.fulltextSearch().trim().length === 0) {
                 this.currentResult(null);
             } else {
@@ -67,6 +69,12 @@ define([
                 this.geocoder.geocode(this.fulltextSearch(), geocodingOptions, function (results) {
                     if (results.length > 0) {
                         this.currentResult(results[0]);
+
+                        return;
+                    }
+
+                    if (typeof noResultCallback === 'function') {
+                        noResultCallback();
                     }
                 }.bind(this));
             }
