@@ -59,9 +59,9 @@ define([
         /**
          * Trigger the geocoding on search. Exposes current result then.
          *
-         * @param {function} noResultCallback
+         * @param {function} noResultCallback Callback executed if no result was found
          */
-        onSearch: function(noResultCallback) {
+        onSearch: function(noResultCallback = null) {
             if (!this.fulltextSearch() || this.fulltextSearch().trim().length === 0) {
                 this.currentResult(null);
             } else {
