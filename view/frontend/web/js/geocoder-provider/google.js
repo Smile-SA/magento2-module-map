@@ -3,7 +3,7 @@ define([
     'leaflet',
     'underscore',
     'geoAddressModel'
-], function ($, L, _, geoAddressModel) {
+], function ($, L, _, GeoAddressModel) {
 
     const BASE_API_URL = '//maps.google.com/maps/api';
 
@@ -214,7 +214,7 @@ define([
             addressData.position.longitude = geoResult.geometry.location.lng;
         }
 
-        return new geoAddressModel(addressData);
+        return new GeoAddressModel(addressData);
     };
 
     /**

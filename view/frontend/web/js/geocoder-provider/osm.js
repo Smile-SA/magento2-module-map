@@ -2,7 +2,7 @@ define([
     'jquery',
     'leaflet',
     'geoAddressModel'
-], function ($, L, geoAddressModel) {
+], function ($, L, GeoAddressModel) {
 
     const BASE_API_URL = '//nominatim.openstreetmap.org';
 
@@ -125,13 +125,15 @@ define([
             }
 
             let address = resp.address;
+            let city = address.hasOwnProperty('city') ?
+                address.city : (address.hasOwnProperty('village') ? address.village : '');
 
             callback({
                 successResponse: true,
-                address: new geoAddressModel({
+                address: new GeoAddressModel({
                     countryCode: address.hasOwnProperty('country_code') ? address.country_code : '',
                     country: address.hasOwnProperty('country') ? address.country : '',
-                    city: address.hasOwnProperty('city') ? address.city : '',
+                    city: city,
                     postCode: address.hasOwnProperty('postcode') ? address.postcode : '',
                     street: address.hasOwnProperty('road') ? address.road : '',
                     streetNumber: address.hasOwnProperty('house_number') ? address.house_number : '',
