@@ -12,34 +12,111 @@
  * @license   Open Software License ("OSL") v. 3.0
  */
 
-define(['ko', 'uiClass'], function (ko, Class) {
+define(function () {
     'use strict';
 
-    return Class.extend({
+    /**
+     * Constructor
+     *
+     * @param {Object} data
+     * @constructor
+     */
+    function GeoAddress(data) {
+        if (!(this instanceof GeoAddress)) {
+            throw new TypeError("GeoAddress constructor cannot be called as a function.");
+        }
+
+        this.city = data.city;
+        this.country = data.country;
+        this.countryCode = data.countryCode;
+        this.street = data.street;
+        this.streetNumber = data.streetNumber;
+        this.postCode = data.postCode;
+
+        this.position = {};
+        this.position.latitude = data.position.latitude;
+        this.position.longitude = data.position.longitude;
+    }
+
+    GeoAddress.prototype = {
 
         /**
-         * {@inheritDoc}
+         * Constructor
          */
-        initialize: function () {
-            this._super().initObservable();
+        constructor: GeoAddress,
 
-            return this;
+        /**
+         * Get city
+         *
+         * @return {String}
+         */
+        getCity: function () {
+            return this.city;
         },
 
         /**
-         * {@inheritDoc}
+         * Get country name
+         *
+         * @return {String}
          */
-        initObservable: function () {
-            this.city = ko.observable(this.city);
-            this.country = ko.observable(this.country);
-            this.countryCode = ko.observable(this.countryCode);
-            this.street = ko.observable(this.street);
-            this.streetNumber = ko.observable(this.streetNumber);
-            this.postCode = ko.observable(this.postCode);
-            this.position.latitude = ko.observable(this.position.latitude);
-            this.position.longitude = ko.observable(this.position.longitude);
-
-            return this;
+        getCountry: function () {
+            return this.country;
         },
-    });
+
+        /**
+         * Get country code
+         *
+         * @return {String}
+         */
+        getCountryCode: function () {
+            return this.countryCode;
+        },
+
+        /**
+         * Get street name
+         *
+         * @return {String}
+         */
+        getStreet: function () {
+            return this.street;
+        },
+
+        /**
+         * Get street number
+         *
+         * @return {String}
+         */
+        getStreetNumber: function () {
+            return this.streetNumber;
+        },
+
+        /**
+         * Get post code
+         *
+         * @return {String}
+         */
+        getPostCode: function () {
+            return this.postCode;
+        },
+
+        /**
+         * Get position latitude
+         *
+         * @return {Number}
+         */
+        getPositionLatitude: function () {
+            return this.position.latitude;
+        },
+
+        /**
+         * Get position longitude
+         *
+         * @return {Number}
+         */
+        getPositionLongitude: function () {
+            return this.position.longitude;
+        },
+    };
+
+    return GeoAddress;
 });
