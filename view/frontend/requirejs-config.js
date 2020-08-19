@@ -25,7 +25,6 @@ var config = {
             'smile-geocoder-provider-google' : 'Smile_Map/js/geocoder-provider/google',
             'listItemEvent'                  : 'Smile_Map/js/listItemEvent',
             'mapMobile'                      : 'Smile_Map/js/mapMobile',
-            'slick'                          : 'Smile_Map/js/lib/slick.min',
             'promotionSlider'                : 'Smile_Map/js/promotionSlider',
             'geoAddressModel'                : 'Smile_Map/js/model/geoAddress'
         }
