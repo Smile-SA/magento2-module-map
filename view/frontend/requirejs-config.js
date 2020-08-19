@@ -26,7 +26,8 @@ var config = {
             'listItemEvent'                  : 'Smile_Map/js/listItemEvent',
             'mapMobile'                      : 'Smile_Map/js/mapMobile',
             'slick'                          : 'Smile_Map/js/lib/slick.min',
-            'promotionSlider'                : 'Smile_Map/js/promotionSlider'
+            'promotionSlider'                : 'Smile_Map/js/promotionSlider',
+            'geoAddressModel'                : 'Smile_Map/js/model/geoAddress'
         }
     },
     config: {
@@ -36,8 +37,6 @@ var config = {
             }
         }
     },
-
-
     paths: {
         'leaflet'                   : 'Smile_Map/leaflet/leaflet',
         'leaflet-geosearch'         : 'Smile_Map/leaflet/plugins/geosearch/l.control.geosearch',
