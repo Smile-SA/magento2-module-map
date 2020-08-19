@@ -131,6 +131,19 @@ define([
          */
         geoLocalizeViaApi: function(callback) {
             return this.geocoder.geoLocalizeViaApi(callback);
+        },
+
+        /**
+         * Get address data by lat / lng
+         *
+         * @param {Number} latitude
+         * @param {Number} longitude
+         * @param {Function} callback
+         *
+         * @return {jqXHR}
+         */
+        getAddressByLatLng: function (latitude, longitude, callback) {
+            return this.geocoder.getAddressByLatLng(latitude, longitude, callback);
         }
-    })
+    });
 });

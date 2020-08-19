@@ -1,4 +1,10 @@
-define(['jquery', 'leaflet'], function ($, L) {
+define([
+    'jquery',
+    'leaflet',
+    'geoAddressModel'
+], function ($, L, GeoAddressModel) {
+
+    const BASE_API_URL = '//nominatim.openstreetmap.org';
 
     function getServiceUrl(qry) {
         var parameters = L.Util.extend({
@@ -97,6 +103,49 @@ define(['jquery', 'leaflet'], function ($, L) {
      */
     Geocoder.prototype.geoLocalizeViaApi = function (callback) {
         $.getJSON(getGeolocalizeApi(this.options), function(success) {callback({coords: {latitude: success.latitude, longitude: success.longitude}})});
+    };
+
+    /**
+     * Retrieve address data by latitude / longitude
+     *
+     * @param {Number} latitude
+     * @param {Number} longitude
+     * @param {Function} callback
+     *
+     * @return {jqXHR}
+     */
+    Geocoder.prototype.getAddressByLatLng = function (latitude, longitude, callback) {
+        return $.getJSON(BASE_API_URL + '/reverse?format=json&lat=' + latitude + '&lon=' + longitude, function (resp) {
+            if (resp.hasOwnProperty('error') || !resp.hasOwnProperty('address') || !resp.hasOwnProperty('lat') ||
+                !resp.hasOwnProperty('lon')
+            ) {
+                callback({successResponse: false});
+
+                return;
+            }
+
+            let address = resp.address;
+            let city = address.hasOwnProperty('city') ?
+                address.city : (address.hasOwnProperty('village') ? address.village : '');
+
+            callback({
+                successResponse: true,
+                address: new GeoAddressModel({
+                    countryCode: address.hasOwnProperty('country_code') ? address.country_code : '',
+                    country: address.hasOwnProperty('country') ? address.country : '',
+                    city: city,
+                    postCode: address.hasOwnProperty('postcode') ? address.postcode : '',
+                    street: address.hasOwnProperty('road') ? address.road : '',
+                    streetNumber: address.hasOwnProperty('house_number') ? address.house_number : '',
+                    position: {
+                        latitude: resp.hasOwnProperty('lat') ? resp.lat : '',
+                        longitude: resp.hasOwnProperty('lon') ? resp.lon : ''
+                    }
+                })
+            });
+        }).fail(function () {
+            callback({successResponse: false});
+        });
     };
 
     /**

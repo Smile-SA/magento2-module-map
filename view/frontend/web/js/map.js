@@ -160,15 +160,7 @@ define([
             registry.get(this.name + '.geocoder', function (geocoder) {
                 this.geocoder = geocoder;
 
-                geocoder.currentResult.subscribe(function (result) {
-                    if (result && result.bounds) {
-                        this.map.setView(result.location, 11);
-                        this.setHashFromLocation({coords : {latitude : result.location.lat, longitude : result.location.lng}});
-                        this.currentBounds = result.bounds;
-                    } else {
-                        this.resetMap();
-                    }
-                }.bind(this));
+                geocoder.currentResult.subscribe(this.currentResultSubscribed.bind(this));
             }.bind(this));
         },
 
@@ -388,6 +380,21 @@ define([
                 return this.provider.addDistanceToMarkers(markersList, centerPosition);
             } else {
                 return markersList;
+            }
+        },
+
+        /**
+         * Executed when currentResult is modify
+         *
+         * @param {Object} result
+         */
+        currentResultSubscribed: function (result) {
+            if (result && result.bounds) {
+                this.map.setView(result.location, 11);
+                this.setHashFromLocation({coords : {latitude : result.location.lat, longitude : result.location.lng}});
+                this.currentBounds = result.bounds;
+            } else {
+                this.resetMap();
             }
         }
     });

@@ -1,4 +1,11 @@
-define(['jquery', 'leaflet'], function ($, L) {
+define([
+    'jquery',
+    'leaflet',
+    'underscore',
+    'geoAddressModel'
+], function ($, L, _, GeoAddressModel) {
+
+    const BASE_API_URL = '//maps.google.com/maps/api';
 
     /**
      * Retrieve Google Maps API
@@ -13,7 +20,7 @@ define(['jquery', 'leaflet'], function ($, L) {
         var locale = config['locale'] || 'fr_FR';
         var libraries = config['libraries'] || 'geometry';
 
-        return '//maps.google.com/maps/api/js?key=' + apiKey + '&libraries=' + libraries + '&language=' + locale + '&country=' + country;
+        return BASE_API_URL + '/js?key=' + apiKey + '&libraries=' + libraries + '&language=' + locale + '&country=' + country;
     }
 
     /**
@@ -129,6 +136,85 @@ define(['jquery', 'leaflet'], function ($, L) {
      */
     Geocoder.prototype.geoLocalizeViaApi = function (callback) {
         $.post(getGeolocalizeApi(this.options), function(success) {callback({coords: {latitude: success.location.lat, longitude: success.location.lng}})});
+    };
+
+    /**
+     * Retrieve address data by latitude / longitude
+     *
+     * @param {Number} latitude
+     * @param {Number} longitude
+     * @param {Function} callback
+     *
+     * @return {jqXHR}
+     */
+    Geocoder.prototype.getAddressByLatLng = function (latitude, longitude, callback) {
+        let url = BASE_API_URL + '/geocode/json?latlng=' + latitude + ',' + longitude +
+            '&key=' + this.options['api_key'];
+
+        return $.getJSON(url, function (resp) {
+            if (!resp.hasOwnProperty('status') || resp.status !== 'OK' || !resp.hasOwnProperty('results')) {
+                callback({successResponse: false});
+
+                return;
+            }
+
+            callback({
+                successResponse: true,
+                address: this._buildAddressModel(resp.results)
+            });
+        }.bind(this)).fail(function () {
+            callback({successResponse: false});
+        });
+    };
+
+    /**
+     * Build address model
+     *
+     * @param {Object} geoResult
+     * @returns {geoAddressModel}
+     * @private
+     */
+    Geocoder.prototype._buildAddressModel = function (geoResult) {
+        let addressData = {};
+
+        if (geoResult.hasOwnProperty('address_components')) {
+            let addressMapping = {
+                streetNumber: 'street_number',
+                country: 'country',
+                countryCode: 'country',
+                city: 'locality',
+                postCode: 'postal_code',
+                street: 'route'
+            };
+
+            _.each(geoResult.address_components, function (addressComponent) {
+                if (addressComponent.hasOwnProperty('types')) {
+                    let attribute = null;
+                    _.every(addressMapping, function (geoAttribute, mappedAttribute) {
+                        if (_.contains(addressComponent.types, geoAttribute)) {
+                            attribute = mappedAttribute;
+
+                            return false;
+                        }
+
+                        return true;
+                    });
+
+                    if (!_.isNull(attribute)) {
+                        addressData[attribute] = attribute === 'countryCode' ?
+                            addressComponent['short_name'] :
+                            addressComponent['long_name'];
+                    }
+                }
+            });
+        }
+
+        if (geoResult.hasOwnProperty('geometry') && geoResult.geometry.hasOwnProperty('location')) {
+            addressData.position.latitude = geoResult.geometry.location.lat;
+            addressData.position.longitude = geoResult.geometry.location.lng;
+        }
+
+        return new GeoAddressModel(addressData);
     };
 
     /**
