@@ -13,7 +13,14 @@
  */
 namespace Smile\Map\Model;
 
+use Magento\Directory\Api\Data\CountryInformationInterface;
+use Magento\Directory\Helper\Data;
+use Magento\Directory\Model\Data\CountryInformationFactory;
+use Magento\Directory\Model\Data\RegionInformationFactory;
+use Magento\Directory\Model\ResourceModel\Country\Collection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Override default implementation of the Magento CountryInformationAcquirer
@@ -25,22 +32,27 @@ use Magento\Framework\Exception\NoSuchEntityException;
 class CountryInformationAcquirer extends \Magento\Directory\Model\CountryInformationAcquirer
 {
     /**
+     * @var Collection
+     */
+    private Collection $countryCollection;
+
+    /**
      * CountryInformationAcquirer constructor.
      *
-     * @param \Magento\Directory\Model\Data\CountryInformationFactory   $countryInformationFactory
-     * @param \Magento\Directory\Model\Data\RegionInformationFactory    $regionInformationFactory
-     * @param \Magento\Directory\Helper\Data                            $directoryHelper
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface        $scopeConfig
-     * @param \Magento\Store\Model\StoreManagerInterface                $storeManager
-     * @param \Magento\Directory\Model\ResourceModel\Country\Collection $countryCollection
+     * @param CountryInformationFactory $countryInformationFactory
+     * @param RegionInformationFactory  $regionInformationFactory
+     * @param Data                      $directoryHelper
+     * @param ScopeConfigInterface      $scopeConfig
+     * @param StoreManagerInterface     $storeManager
+     * @param Collection                $countryCollection
      */
     public function __construct(
-        \Magento\Directory\Model\Data\CountryInformationFactory $countryInformationFactory,
-        \Magento\Directory\Model\Data\RegionInformationFactory $regionInformationFactory,
-        \Magento\Directory\Helper\Data $directoryHelper,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Directory\Model\ResourceModel\Country\Collection $countryCollection
+        CountryInformationFactory $countryInformationFactory,
+        RegionInformationFactory $regionInformationFactory,
+        Data $directoryHelper,
+        ScopeConfigInterface $scopeConfig,
+        StoreManagerInterface $storeManager,
+        Collection $countryCollection
     ) {
         $this->countryCollection = $countryCollection;
         parent::__construct($countryInformationFactory, $regionInformationFactory, $directoryHelper, $scopeConfig, $storeManager);
@@ -51,10 +63,10 @@ class CountryInformationAcquirer extends \Magento\Directory\Model\CountryInforma
      *
      * @param string $countryId Country Id
      *
-     * @return \Magento\Directory\Api\Data\CountryInformationInterface
+     * @return CountryInformationInterface
      * @throws NoSuchEntityException
      */
-    public function getCountryInfo($countryId)
+    public function getCountryInfo($countryId): CountryInformationInterface
     {
         $store = $this->storeManager->getStore();
         $storeLocale = $this->scopeConfig->getValue(
@@ -74,8 +86,7 @@ class CountryInformationAcquirer extends \Magento\Directory\Model\CountryInforma
                 )
             );
         }
-        $countryInfo = $this->setCountryInfo($country, $regions, $storeLocale);
 
-        return $countryInfo;
+        return $this->setCountryInfo($country, $regions, $storeLocale);
     }
 }

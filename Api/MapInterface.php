@@ -29,21 +29,21 @@ interface MapInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Returns current map provider name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Return current map configuration.
      *
      * @return array
      */
-    public function getConfig();
+    public function getConfig(): array;
 
     /**
      * Returns the direction URL using the current provider.
@@ -53,5 +53,5 @@ interface MapInterface
      *
      * @return string
      */
-    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null);
+    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null): string;
 }

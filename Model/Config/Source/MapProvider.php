@@ -12,6 +12,9 @@
  */
 namespace Smile\Map\Model\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
+use Smile\Map\Model\MapProvider as MapProviderModel;
+
 /**
  * Source Model for Map provider in module configuration.
  *
@@ -19,19 +22,19 @@ namespace Smile\Map\Model\Config\Source;
  * @package  Smile\Map
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class MapProvider implements \Magento\Framework\Data\OptionSourceInterface
+class MapProvider implements OptionSourceInterface
 {
     /**
-     * @var \Smile\Map\Model\MapProvider
+     * @var MapProviderModel
      */
-    private $mapProvider;
+    private MapProviderModel $mapProvider;
 
     /**
      * MapProvider constructor.
      *
-     * @param \Smile\Map\Model\MapProvider $mapProvider The Map provider
+     * @param MapProviderModel $mapProvider The Map provider
      */
-    public function __construct(\Smile\Map\Model\MapProvider $mapProvider)
+    public function __construct(MapProviderModel $mapProvider)
     {
         $this->mapProvider = $mapProvider;
     }
@@ -41,7 +44,7 @@ class MapProvider implements \Magento\Framework\Data\OptionSourceInterface
      *
      * @return array Format: array(array('value' => '<value>', 'label' => '<label>'), ...)
      */
-    public function toOptionArray()
+    public function toOptionArray(): array
     {
         $result = [];
 

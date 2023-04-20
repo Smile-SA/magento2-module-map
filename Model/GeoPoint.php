@@ -27,12 +27,12 @@ class GeoPoint implements GeoPointInterface
     /**
      * @var float
      */
-    private $latitude;
+    private float $latitude;
 
     /**
      * @var float
      */
-    private $longitude;
+    private float $longitude;
 
     /**
      * Constructor.
@@ -40,7 +40,7 @@ class GeoPoint implements GeoPointInterface
      * @param float $latitude  Latitude
      * @param float $longitude Longitude
      */
-    public function __construct($latitude, $longitude)
+    public function __construct(float $latitude, float $longitude)
     {
         $this->latitude  = $latitude;
         $this->longitude = $longitude;
@@ -49,7 +49,7 @@ class GeoPoint implements GeoPointInterface
     /**
      * {@inheritDoc}
      */
-    public function getLatitude()
+    public function getLatitude(): float
     {
         return $this->latitude;
     }
@@ -57,7 +57,7 @@ class GeoPoint implements GeoPointInterface
     /**
      * {@inheritDoc}
      */
-    public function getLongitude()
+    public function getLongitude(): float
     {
         return $this->longitude;
     }

@@ -13,8 +13,9 @@
  */
 namespace Smile\Map\Model;
 
-use Smile\Map\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Framework\Model\AbstractModel;
+use Smile\Map\Api\Data\AddressInterface;
 
 /**
  * Default implementation of the AddressInterface.
@@ -25,18 +26,12 @@ use Magento\Framework\Model\AbstractModel;
  */
 class Address extends AbstractModel implements AddressInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getCountryId()
-    {
-        return $this->getData(self::COUNTRY_ID);
-    }
+    const RETAILER_ID_FIELD = 'retailer_id';
 
     /**
      * {@inheritDoc}
      */
-    public function getRegion()
+    public function getRegion(): RegionInterface|null|string
     {
         return $this->getData(self::REGION);
     }
@@ -44,16 +39,23 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function getRegionId()
+    public function getRegionId(): int|null
     {
         return $this->getData(self::REGION_ID);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function getCountryId(): string|null
+    {
+        return $this->getData(self::COUNTRY_ID);
+    }
 
     /**
      * {@inheritDoc}
      */
-    public function getStreet()
+    public function getStreet(): array|string|null
     {
         return is_array($this->getData(self::STREET)) ? $this->getData(self::STREET) : [$this->getData(self::STREET)];
     }
@@ -61,7 +63,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function getPostcode()
+    public function getPostcode(): string|null
     {
         return $this->getData(self::POSTCODE);
     }
@@ -69,23 +71,25 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function getCity()
+    public function getCity(): string|null
     {
         return $this->getData(self::CITY);
     }
 
     /**
-     * {@inheritDoc}
+     * @param string|int $retailerId
+     *
+     * @return $this
      */
-    public function setRetailerId($retailerId)
+    public function setRetailerId(string|int $retailerId): self
     {
-        return $this->setData(self::RETAILER_ID, $retailerId);
+        return $this->setData(self::RETAILER_ID_FIELD, $retailerId);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setCountryId($countryId)
+    public function setCountryId(string $countryId): self
     {
         return $this->setData(self::COUNTRY_ID, $countryId);
     }
@@ -93,7 +97,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setRegion($region = null)
+    public function setRegion(?string $region = null): self
     {
         return $this->setData(self::REGION, $region);
     }
@@ -101,7 +105,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setRegionId($regionId)
+    public function setRegionId(int $regionId): self
     {
         return $this->setData(self::REGION_ID, $regionId);
     }
@@ -109,7 +113,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setStreet($street)
+    public function setStreet(array|string $street): self
     {
         return $this->setData(self::STREET, $street);
     }
@@ -117,7 +121,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setPostcode($postcode)
+    public function setPostcode(string $postcode): self
     {
         return $this->setData(self::POSTCODE, $postcode);
     }
@@ -125,7 +129,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * {@inheritDoc}
      */
-    public function setCity($city)
+    public function setCity(string $city): self
     {
         return $this->setData(self::CITY, $city);
     }

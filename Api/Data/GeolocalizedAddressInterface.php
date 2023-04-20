@@ -13,6 +13,8 @@
  */
 namespace Smile\Map\Api\Data;
 
+use Smile\Map\Api\Data\GeoPointInterface;
+
 /**
  * Geolocalized address interface definition.
  *
@@ -31,16 +33,16 @@ interface GeolocalizedAddressInterface extends AddressInterface
     /**
      * Get address coordinates.
      *
-     * @return \Smile\Map\Api\Data\GeoPointInterface
+     * @return GeoPointInterface
      */
-    public function getCoordinates();
+    public function getCoordinates(): GeoPointInterface;
 
     /**
      * Set address coordinates.
      *
-     * @param \Smile\Map\Api\Data\GeoPointInterface $coordinates Coordinates.
+     * @param GeoPointInterface $coordinates Coordinates.
      *
      * @return $this
      */
-    public function setCoordinates(\Smile\Map\Api\Data\GeoPointInterface $coordinates);
+    public function setCoordinates(GeoPointInterface $coordinates): self;
 }

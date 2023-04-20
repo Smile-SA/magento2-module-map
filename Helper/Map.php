@@ -13,10 +13,11 @@
 namespace Smile\Map\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem;
-use \Magento\Framework\Locale\Resolver as LocaleResolver;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Filesystem\Directory\ReadInterface;
+use Magento\Framework\Locale\Resolver as LocaleResolver;
 use Magento\Framework\View\Asset\Repository;
 use Magento\MediaStorage\Helper\File\Storage\Database;
 use Magento\Store\Model\ScopeInterface;
@@ -43,35 +44,35 @@ class Map extends AbstractHelper
     const SHARED_SETTINGS_NAME = 'all';
 
     /**
-     * @var \Magento\Framework\Locale\Resolver
+     * @var LocaleResolver
      */
-    private $localeResolver;
+    private LocaleResolver $localeResolver;
 
     /**
-     * @var \Magento\MediaStorage\Helper\File\Storage\Database
+     * @var Database
      */
-    private $fileStorageHelper;
+    private Database $fileStorageHelper;
 
     /**
-     * @var \Magento\Framework\Filesystem
+     * @var Filesystem
      */
-    private $fileSystem;
+    private Filesystem $fileSystem;
 
     /**
-     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
+     * @var ReadInterface
      */
-    private $mediaDirectory;
+    private ReadInterface $mediaDirectory;
 
     /**
-     * @var \Magento\Framework\View\Asset\Repository
+     * @var Repository
      */
-    private $assetRepository;
+    private Repository $assetRepository;
 
     /**
      * @var StoreManagerInterface
      */
-    protected $storeManager;
-    
+    protected StoreManagerInterface $storeManager;
+
     /**
      * Map constructor.
      *
@@ -95,6 +96,7 @@ class Map extends AbstractHelper
         $this->fileSystem        = $fileSystem;
         $this->assetRepository   = $assetRepository;
         $this->storeManager      = $storeManager;
+        $this->mediaDirectory    = $this->fileSystem->getDirectoryRead(DirectoryList::MEDIA);
         parent::__construct($context);
     }
 
@@ -103,7 +105,7 @@ class Map extends AbstractHelper
      *
      * @return string
      */
-    public function getProviderIdentifier()
+    public function getProviderIdentifier(): string
     {
         return $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH . '/provider');
     }
@@ -115,7 +117,7 @@ class Map extends AbstractHelper
      *
      * @return mixed[]
      */
-    public function getProviderConfiguration($providerIdentifier)
+    public function getProviderConfiguration(string $providerIdentifier): array
     {
         $config = [];
 
@@ -128,7 +130,7 @@ class Map extends AbstractHelper
         };
 
         $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH, 'store', $this->storeManager->getStore()->getCode());
-        
+
         array_walk($allConfig, $mapKeyFunc);
 
         if (!isset($config['country'])) {
@@ -151,7 +153,7 @@ class Map extends AbstractHelper
      *
      * @return string
      */
-    private function getMarkerIcon($config)
+    private function getMarkerIcon(array $config): string
     {
         $folderName    = MarkerIcon::UPLOAD_DIR;
         $storeLogoPath = isset($config['markerIcon']) ? $config['markerIcon'] : null;
@@ -182,7 +184,7 @@ class Map extends AbstractHelper
      *
      * @return bool
      */
-    private function isFile($filename)
+    private function isFile(string $filename): bool
     {
         if ($this->fileStorageHelper->checkDbUsage() && !$this->getMediaDirectory()->isFile($filename)) {
             $this->fileStorageHelper->saveFileToFilesystem($filename);
@@ -194,14 +196,10 @@ class Map extends AbstractHelper
     /**
      * Get media directory
      *
-     * @return \Magento\Framework\Filesystem\Directory\Read
+     * @return ReadInterface
      */
-    private function getMediaDirectory()
+    private function getMediaDirectory(): ReadInterface
     {
-        if (!$this->mediaDirectory) {
-            $this->mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::MEDIA);
-        }
-
         return $this->mediaDirectory;
     }
 }

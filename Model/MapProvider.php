@@ -13,6 +13,7 @@
  */
 namespace Smile\Map\Model;
 
+use Smile\Map\Api\MapInterface;
 use Smile\Map\Api\MapProviderInterface;
 use Smile\Map\Helper\Map as MapHelper;
 
@@ -26,14 +27,14 @@ use Smile\Map\Helper\Map as MapHelper;
 class MapProvider implements MapProviderInterface
 {
     /**
-     * @var \Smile\Map\Api\MapInterface[]
+     * @var MapInterface[]
      */
-    private $mapProviders;
+    private array $mapProviders;
 
     /**
      * @var MapHelper
      */
-    private $mapHelper;
+    private MapHelper $mapHelper;
 
     /**
      * Contructor.
@@ -41,8 +42,10 @@ class MapProvider implements MapProviderInterface
      * @param MapHelper $mapHelper    Map helper.
      * @param array     $mapProviders Map providers.
      */
-    public function __construct(MapHelper $mapHelper, array $mapProviders = [])
-    {
+    public function __construct(
+        MapHelper $mapHelper,
+        array $mapProviders = []
+    ) {
         $this->mapHelper    = $mapHelper;
         $this->mapProviders = $mapProviders;
     }
@@ -50,7 +53,7 @@ class MapProvider implements MapProviderInterface
     /**
      * {@inheritDoc}
      */
-    public function getMap()
+    public function getMap(): MapInterface
     {
         $providerIdentifier = $this->mapHelper->getProviderIdentifier();
 
@@ -62,9 +65,9 @@ class MapProvider implements MapProviderInterface
     }
 
     /**
-     * @return array|\Smile\Map\Api\MapInterface[]
+     * @return array|MapInterface[]
      */
-    public function getProviders()
+    public function getProviders(): array
     {
         return $this->mapProviders;
     }

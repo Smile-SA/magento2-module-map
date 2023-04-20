@@ -12,6 +12,8 @@
  */
 namespace Smile\Map\Model\Config\Backend;
 
+use Magento\Config\Model\Config\Backend\File;
+
 /**
  * MarkerIcon backend model. Extended to allow svg files.
  *
@@ -19,7 +21,7 @@ namespace Smile\Map\Model\Config\Backend;
  * @package  Smile\Map
  * @author   Romain Ruaud <romain.ruaud@smile.fr>
  */
-class MarkerIcon extends \Magento\Config\Model\Config\Backend\File
+class MarkerIcon extends File
 {
     /**
      * Where the files are stored.
@@ -30,7 +32,7 @@ class MarkerIcon extends \Magento\Config\Model\Config\Backend\File
      * {@inheritdoc}
      * @SuppressWarnings(PHPMD.CamelCaseMethodName) method is inherited.
      */
-    protected function _getAllowedExtensions()
+    protected function _getAllowedExtensions(): array
     {
         return ['jpg', 'jpeg', 'gif', 'png', 'svg'];
     }

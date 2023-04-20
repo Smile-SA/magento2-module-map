@@ -13,6 +13,8 @@
  */
 namespace Smile\Map\Api\Data;
 
+use Magento\Customer\Api\Data\RegionInterface;
+
 /**
  * Address interface definition.
  *
@@ -35,44 +37,44 @@ interface AddressInterface
     /**
      * Get region.
      *
-     * @return \Magento\Customer\Api\Data\RegionInterface|null
+     * @return RegionInterface|null|string
      */
-    public function getRegion();
+    public function getRegion(): RegionInterface|null|string;
 
     /**
      * Get region ID.
      *
      * @return int|null
      */
-    public function getRegionId();
+    public function getRegionId(): int|null;
 
     /**
      * Two-letter country code in ISO_3166-2 format.
      *
      * @return string|null
      */
-    public function getCountryId();
+    public function getCountryId(): string|null;
 
     /**
      * Get street.
      *
      * @return string[]|string|null
      */
-    public function getStreet();
+    public function getStreet(): array|string|null;
 
     /**
      * Get postcode.
      *
      * @return string|null
      */
-    public function getPostcode();
+    public function getPostcode(): string|null;
 
     /**
      * Get city name.
      *
      * @return string|null
      */
-    public function getCity();
+    public function getCity(): string|null;
 
     /**
      * Set country id.
@@ -81,16 +83,16 @@ interface AddressInterface
      *
      * @return $this
      */
-    public function setCountryId($countryId);
+    public function setCountryId(string $countryId): self;
 
     /**
      * Set region.
      *
-     * @param string $region Region.
+     * @param ?string $region Region.
      *
      * @return $this
      */
-    public function setRegion($region = null);
+    public function setRegion(?string $region = null): self;
 
     /**
      * Set region ID.
@@ -99,7 +101,7 @@ interface AddressInterface
      *
      * @return $this
      */
-    public function setRegionId($regionId);
+    public function setRegionId(int $regionId): self;
 
     /**
      * Set street.
@@ -108,7 +110,7 @@ interface AddressInterface
      *
      * @return $this
      */
-    public function setStreet($street);
+    public function setStreet(array|string $street): self;
 
     /**
      * Set postcode.
@@ -117,7 +119,7 @@ interface AddressInterface
      *
      * @return $this
      */
-    public function setPostcode($postcode);
+    public function setPostcode(string $postcode): self;
 
     /**
      * Set city name.
@@ -126,5 +128,5 @@ interface AddressInterface
      *
      * @return $this
      */
-    public function setCity($city);
+    public function setCity(string $city): self;
 }

@@ -14,6 +14,7 @@
 namespace Smile\Map\Model;
 
 use Smile\Map\Api\Data\GeolocalizedAddressInterface;
+use Smile\Map\Api\Data\GeoPointInterface;
 
 /**
  * Default implementation of the GeolocalizedAddressInterface.
@@ -27,7 +28,7 @@ class GeolocalizedAddress extends Address implements GeolocalizedAddressInterfac
     /**
      * {@inheritDoc}
      */
-    public function getCoordinates()
+    public function getCoordinates(): GeoPointInterface
     {
         return $this->getData(self::COORDINATES);
     }
@@ -35,7 +36,7 @@ class GeolocalizedAddress extends Address implements GeolocalizedAddressInterfac
     /**
      * {@inheritDoc}
      */
-    public function setCoordinates(\Smile\Map\Api\Data\GeoPointInterface $coordinates)
+    public function setCoordinates(GeoPointInterface $coordinates): self
     {
         return $this->setData(self::COORDINATES, $coordinates);
     }

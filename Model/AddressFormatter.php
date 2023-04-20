@@ -13,9 +13,13 @@
  */
 namespace Smile\Map\Model;
 
-use Smile\Map\Api\Data\AddressInterface;
-use Magento\Store\Model\ScopeInterface;
+use Magento\Directory\Api\CountryInformationAcquirerInterface;
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Filter\FilterManager;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Smile\Map\Api\Data\AddressInterface;
 
 /**
  * Address formatter tool.
@@ -52,50 +56,50 @@ class AddressFormatter
     const FORMAT_PDF     = 'pdf';
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
-    private $storeManager;
+    private StoreManagerInterface $storeManager;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
-    private $scopeConfig;
+    private ScopeConfigInterface $scopeConfig;
 
     /**
-     * @var \Magento\Directory\Api\CountryInformationAcquirerInterface
+     * @var CountryInformationAcquirerInterface
      */
-    private $countryInfo;
+    private CountryInformationAcquirerInterface $countryInfo;
 
     /**
-     * @var \Magento\Framework\Filter\FilterManager
+     * @var FilterManager
      */
-    private $filterManager;
+    private FilterManager $filterManager;
 
     /**
-     * @var \Magento\Framework\App\CacheInterface
+     * @var CacheInterface
      */
-    private $cacheInterface;
+    private CacheInterface $cacheInterface;
 
     /**
      * @var array
      */
-    private $localCache = [];
+    private array $localCache = [];
 
     /**
      * Constructor.
      *
-     * @param \Magento\Framework\Filter\FilterManager                    $filterManager  Filter manager used to render address templates.
-     * @param \Magento\Store\Model\StoreManagerInterface                 $storeManager   Store manager.
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface         $scopeConfig    Store configuration
-     * @param \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo    Country info.
-     * @param \Magento\Framework\App\CacheInterface                      $cacheInterface Cache Interface.
+     * @param FilterManager                         $filterManager  Filter manager used to render address templates.
+     * @param StoreManagerInterface                 $storeManager   Store manager.
+     * @param ScopeConfigInterface                  $scopeConfig    Store configuration
+     * @param CountryInformationAcquirerInterface   $countryInfo    Country info.
+     * @param CacheInterface                        $cacheInterface Cache Interface.
      */
     public function __construct(
-        \Magento\Framework\Filter\FilterManager $filterManager,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Directory\Api\CountryInformationAcquirerInterface $countryInfo,
-        \Magento\Framework\App\CacheInterface $cacheInterface
+        FilterManager $filterManager,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig,
+        CountryInformationAcquirerInterface $countryInfo,
+        CacheInterface $cacheInterface
     ) {
         $this->filterManager  = $filterManager;
         $this->storeManager   = $storeManager;
@@ -109,11 +113,12 @@ class AddressFormatter
      *
      * @param AddressInterface $address Address to be formatted.
      * @param string           $format  Format code.
-     * @param int              $storeId Store id.
+     * @param ?int             $storeId Store id.
      *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return string
      */
-    public function formatAddress(AddressInterface $address, $format = self::FORMAT_TEXT, $storeId = null)
+    public function formatAddress(AddressInterface $address, string $format = self::FORMAT_TEXT, ?int $storeId = null): string
     {
         if ($storeId === null) {
             $storeId = $this->storeManager->getStore()->getId();
@@ -130,9 +135,10 @@ class AddressFormatter
      *
      * @param AddressInterface $address Address to be formatted.
      *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return array
      */
-    private function getVariables(AddressInterface $address)
+    private function getVariables(AddressInterface $address): array
     {
         $variables = $address->getData();
 
@@ -161,7 +167,7 @@ class AddressFormatter
      *
      * @return string
      */
-    private function getAddressTemplate($format, $storeId)
+    private function getAddressTemplate(string $format, int $storeId): string
     {
         $path = self::FORMAT_XML_BASE_XPATH . '/' . $format;
 
@@ -175,9 +181,10 @@ class AddressFormatter
      *
      * @param string $countryId The Country Id
      *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @return mixed
      */
-    private function getCountryFullName($countryId)
+    private function getCountryFullName(string $countryId): mixed
     {
         $store = $this->storeManager->getStore();
         $storeLocale = $this->scopeConfig->getValue(

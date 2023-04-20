@@ -34,12 +34,12 @@ interface GeoPointInterface
      *
      * @return float
      */
-    public function getLatitude();
+    public function getLatitude(): float;
 
     /**
      * Geopoint longitude.
      *
      * @return float
      */
-    public function getLongitude();
+    public function getLongitude(): float;
 }

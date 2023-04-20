@@ -13,9 +13,10 @@
  */
 namespace Smile\Map\Model\Map;
 
-use \Smile\Map\Helper\Map as MapHelper;
 use Magento\Framework\Filter\FilterManager;
 use Smile\Map\Api\Data\GeoPointInterface;
+use Smile\Map\Api\MapInterface;
+use Smile\Map\Helper\Map as MapHelper;
 
 /**
  * Default implementation of the MapInterface.
@@ -24,27 +25,27 @@ use Smile\Map\Api\Data\GeoPointInterface;
  * @package  Smile\Map
  * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
-class DefaultMap implements \Smile\Map\Api\MapInterface
+class DefaultMap implements MapInterface
 {
     /**
      * @var string
      */
-    private $identifier;
+    private string $identifier;
 
     /**
      * @var string
      */
-    private $name;
+    private string $name;
 
     /**
      * @var array
      */
-    private $config;
+    private array $config;
 
     /**
      * @var FilterManager
      */
-    private $filterManager;
+    private FilterManager $filterManager;
 
     /**
      * Constructor.
@@ -54,8 +55,12 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
      * @param MapHelper     $mapHelper     Map helper.
      * @param FilterManager $filterManager Template filter manager.
      */
-    public function __construct($identifier, $name, MapHelper $mapHelper, FilterManager $filterManager)
-    {
+    public function __construct(
+        string $identifier,
+        string $name,
+        MapHelper $mapHelper,
+        FilterManager $filterManager
+    ) {
         $this->identifier    = $identifier;
         $this->name          = $name;
         $this->config        = $mapHelper->getProviderConfiguration($identifier);
@@ -65,7 +70,7 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     /**
      * {@inheritDoc}
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
@@ -73,7 +78,7 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     /**
      * {@inheritDoc}
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -81,7 +86,7 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -89,7 +94,7 @@ class DefaultMap implements \Smile\Map\Api\MapInterface
     /**
      * {@inheritDoc}
      */
-    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null)
+    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null): string
     {
         $urlTemplate = $this->config['direction_url_template'];
 
