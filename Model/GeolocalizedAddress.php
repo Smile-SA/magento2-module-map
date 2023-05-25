@@ -1,16 +1,5 @@
 <?php
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
 namespace Smile\Map\Model;
 
 use Smile\Map\Api\Data\GeolocalizedAddressInterface;
@@ -18,15 +7,11 @@ use Smile\Map\Api\Data\GeoPointInterface;
 
 /**
  * Default implementation of the GeolocalizedAddressInterface.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 class GeolocalizedAddress extends Address implements GeolocalizedAddressInterface
 {
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function getCoordinates(): GeoPointInterface
     {
@@ -34,7 +19,7 @@ class GeolocalizedAddress extends Address implements GeolocalizedAddressInterfac
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setCoordinates(GeoPointInterface $coordinates): self
     {

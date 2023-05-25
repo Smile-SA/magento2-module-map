@@ -1,27 +1,10 @@
 <?xml version="1.0"?>
-<!--
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- *
- * @category  Smile
- * @package   Smile\StoreLocator
- * @author    Romain Ruaud <romain.ruaud@smile.fr>
- * @author    Guillaume Vrac <guillaume.vrac@smile.fr>
- * @copyright 2016 Smile
- * @license   Open Software License ("OSL") v. 3.0
- */
- -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Smile_Map::leaflet/leaflet.css"/>
-        <!-- add conditional load css when use markercluser mode -->
+        <!-- Add conditional load css when use markercluser mode -->
         <css src="Smile_Map::leaflet/plugins/markercluster/MarkerCluster.css"/>
         <css src="Smile_Map::leaflet/plugins/markercluster/MarkerCluster.Default.css"/>
         <script src="Smile_Map::js/polyfill/ie11/promise.min.js" ie_condition="IE 11"/>
     </head>
 </page>
-

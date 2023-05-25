@@ -1,16 +1,5 @@
 <?php
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
 namespace Smile\Map\Model;
 
 use Magento\Customer\Api\Data\RegionInterface;
@@ -19,67 +8,63 @@ use Smile\Map\Api\Data\AddressInterface;
 
 /**
  * Default implementation of the AddressInterface.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 class Address extends AbstractModel implements AddressInterface
 {
-    const RETAILER_ID_FIELD = 'retailer_id';
+    public const RETAILER_ID_FIELD = 'retailer_id';
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getRegion(): RegionInterface|null|string
+    public function getRegion(): RegionInterface|string|null
     {
         return $this->getData(self::REGION);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getRegionId(): int|null
+    public function getRegionId(): ?int
     {
         return $this->getData(self::REGION_ID);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getCountryId(): string|null
+    public function getCountryId(): ?string
     {
         return $this->getData(self::COUNTRY_ID);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getStreet(): array|string|null
+    public function getStreet(): array
     {
-        return is_array($this->getData(self::STREET)) ? $this->getData(self::STREET) : [$this->getData(self::STREET)];
+        return is_array($this->getData(self::STREET))
+            ? $this->getData(self::STREET)
+            : [$this->getData(self::STREET)];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getPostcode(): string|null
+    public function getPostcode(): ?string
     {
         return $this->getData(self::POSTCODE);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getCity(): string|null
+    public function getCity(): ?string
     {
         return $this->getData(self::CITY);
     }
 
     /**
-     * @param string|int $retailerId
-     *
-     * @return $this
+     * Set retailer id.
      */
     public function setRetailerId(string|int $retailerId): self
     {
@@ -87,7 +72,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setCountryId(string $countryId): self
     {
@@ -95,7 +80,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setRegion(?string $region = null): self
     {
@@ -103,7 +88,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setRegionId(int $regionId): self
     {
@@ -111,7 +96,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setStreet(array|string $street): self
     {
@@ -119,7 +104,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setPostcode(string $postcode): self
     {
@@ -127,7 +112,7 @@ class Address extends AbstractModel implements AddressInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
     public function setCity(string $city): self
     {
