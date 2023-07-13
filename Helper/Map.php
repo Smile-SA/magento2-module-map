@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -101,7 +103,7 @@ class Map extends AbstractHelper
             $params      = ['_secure' => $this->_getRequest()->isSecure()];
             $url         = $this->assetRepository->getUrlWithParams($defaultFile, $params);
         } catch (LocalizedException $e) {
-            $this->_logger->critical($e);
+            $this->_logger->critical($e->getMessage());
             $url = $this->_urlBuilder->getUrl('', ['_direct' => 'core/index/notFound']);
         }
 

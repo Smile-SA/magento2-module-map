@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Model;
 
 use Magento\Customer\Api\Data\RegionInterface;
@@ -26,7 +28,7 @@ class Address extends AbstractModel implements AddressInterface
      */
     public function getRegionId(): ?int
     {
-        return $this->getData(self::REGION_ID);
+        return (int) $this->getData(self::REGION_ID);
     }
 
     /**
@@ -90,7 +92,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * @inheritdoc
      */
-    public function setRegionId(int $regionId): self
+    public function setRegionId(string|int $regionId): self
     {
         return $this->setData(self::REGION_ID, $regionId);
     }

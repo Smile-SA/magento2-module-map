@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Model;
 
 use Magento\Directory\Api\Data\CountryInformationInterface;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Api;
 
 use Smile\Map\Api\Data\GeoPointInterface;
@@ -33,8 +35,8 @@ interface MapInterface
     /**
      * Returns the direction URL using the current provider.
      *
-     * @param GeoPointInterface $dest Destination for the direction URL.
-     * @param GeoPointInterface $orig Optional origin for the direction URL.
+     * @param \Smile\Map\Api\Data\GeoPointInterface $dest Destination for the direction URL.
+     * @param \Smile\Map\Api\Data\GeoPointInterface $orig Optional origin for the direction URL.
      * @return string
      */
     public function getDirectionUrl(GeoPointInterface $dest, ?GeoPointInterface $orig = null): string;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Model\Map;
 
 use Magento\Framework\DataObject;

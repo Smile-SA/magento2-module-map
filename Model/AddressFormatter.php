@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Model;
 
 use Magento\Directory\Api\CountryInformationAcquirerInterface;
@@ -45,7 +47,7 @@ class AddressFormatter
         ?int $storeId = null
     ): string {
         if ($storeId === null) {
-            $storeId = $this->storeManager->getStore()->getId();
+            $storeId = (int) $this->storeManager->getStore()->getId();
         }
 
         $template  = $this->getAddressTemplate($format, $storeId);

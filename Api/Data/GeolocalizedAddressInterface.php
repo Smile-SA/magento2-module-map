@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Smile\Map\Api\Data;
 
 /**
@@ -12,14 +14,14 @@ interface GeolocalizedAddressInterface extends AddressInterface
     /**
      * Get address coordinates.
      *
-     * @return GeoPointInterface
+     * @return \Smile\Map\Api\Data\GeoPointInterface
      */
     public function getCoordinates(): GeoPointInterface;
 
     /**
      * Set address coordinates.
      *
-     * @param GeoPointInterface $coordinates Coordinates.
+     * @param \Smile\Map\Api\Data\GeoPointInterface $coordinates Coordinates.
      * @return $this
      */
     public function setCoordinates(GeoPointInterface $coordinates): self;
