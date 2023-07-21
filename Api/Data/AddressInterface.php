@@ -83,7 +83,7 @@ interface AddressInterface
      * @param int $regionId Region id.
      * @return $this
      */
-    public function setRegionId(string|int $regionId): self;
+    public function setRegionId(int $regionId): self;
 
     /**
      * Set street.

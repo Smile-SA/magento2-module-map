@@ -68,7 +68,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * Set retailer id.
      */
-    public function setRetailerId(string|int $retailerId): self
+    public function setRetailerId(int $retailerId): self
     {
         return $this->setData(self::RETAILER_ID_FIELD, $retailerId);
     }
@@ -92,7 +92,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * @inheritdoc
      */
-    public function setRegionId(string|int $regionId): self
+    public function setRegionId(int $regionId): self
     {
         return $this->setData(self::REGION_ID, $regionId);
     }
