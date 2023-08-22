@@ -16,7 +16,7 @@ interface GeolocalizedAddressInterface extends AddressInterface
      *
      * @return \Smile\Map\Api\Data\GeoPointInterface
      */
-    public function getCoordinates(): GeoPointInterface;
+    public function getCoordinates(): ?GeoPointInterface;
 
     /**
      * Set address coordinates.
