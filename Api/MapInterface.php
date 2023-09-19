@@ -1,26 +1,13 @@
 <?php
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
+declare(strict_types=1);
+
 namespace Smile\Map\Api;
 
 use Smile\Map\Api\Data\GeoPointInterface;
 
 /**
  * Map interface definition.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 interface MapInterface
 {
@@ -29,29 +16,28 @@ interface MapInterface
      *
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Returns current map provider name.
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Return current map configuration.
      *
      * @return array
      */
-    public function getConfig();
+    public function getConfig(): array;
 
     /**
      * Returns the direction URL using the current provider.
      *
-     * @param GeoPointInterface $dest Destination for the direction URL.
-     * @param GeoPointInterface $orig Optional origin for the direction URL.
-     *
+     * @param \Smile\Map\Api\Data\GeoPointInterface $dest Destination for the direction URL.
+     * @param \Smile\Map\Api\Data\GeoPointInterface $orig Optional origin for the direction URL.
      * @return string
      */
-    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null);
+    public function getDirectionUrl(GeoPointInterface $dest, ?GeoPointInterface $orig = null): string;
 }

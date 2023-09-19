@@ -1,26 +1,10 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Smile Map Configuration.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <smile_map>
             <map>
                 <provider>osm</provider>
-                
+
                 <provider_osm_tile_url>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</provider_osm_tile_url>
                 <provider_osm_direction_url_template>https://www.openstreetmap.org/directions?route={{depend has_origin}}{{var orig_latitude}},{{var orig_longitude}}{{/depend}};{{var dest_latitude}},{{var dest_longitude}}</provider_osm_direction_url_template>
 

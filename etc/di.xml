@@ -1,42 +1,24 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Smile Map Dependency Injection.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Smile\Map\Api\Data\GeoPointInterface" type="Smile\Map\Model\GeoPoint"/>
+    <preference for="Smile\Map\Api\Data\AddressInterface" type="Smile\Map\Model\Address"/>
+    <preference for="Smile\Map\Api\Data\GeolocalizedAddressInterface" type="Smile\Map\Model\GeolocalizedAddress"/>
+    <preference for="Smile\Map\Api\MapProviderInterface" type="Smile\Map\Model\MapProvider"/>
 
-    <preference for="Smile\Map\Api\Data\GeoPointInterface" type="Smile\Map\Model\GeoPoint" />
-    <preference for="Smile\Map\Api\Data\AddressInterface" type="Smile\Map\Model\Address" />
-    <preference for="Smile\Map\Api\Data\GeolocalizedAddressInterface" type="Smile\Map\Model\GeolocalizedAddress" />
-    
-    <preference for="Smile\Map\Api\MapProviderInterface" type="Smile\Map\Model\MapProvider" />
-    
     <virtualType name="Smile\Map\Model\Map\Osm" type="Smile\Map\Model\Map\DefaultMap">
         <arguments>
             <argument name="identifier" xsi:type="string">osm</argument>
             <argument name="name" xsi:type="string">OpenStreetMap</argument>
         </arguments>
     </virtualType>
-    
+
     <virtualType name="Smile\Map\Model\Map\Google" type="Smile\Map\Model\Map\DefaultMap">
         <arguments>
             <argument name="identifier" xsi:type="string">google</argument>
             <argument name="name" xsi:type="string">Google Maps</argument>
         </arguments>
     </virtualType>
-    
+
     <type name="Smile\Map\Model\MapProvider">
         <arguments>
             <argument name="mapProviders" xsi:type="array">

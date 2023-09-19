@@ -1,22 +1,17 @@
 <?php
-/**
- * DISCLAIMER
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
+declare(strict_types=1);
+
 namespace Smile\Map\Helper;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem;
-use \Magento\Framework\Locale\Resolver as LocaleResolver;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Filesystem;
+use Magento\Framework\Filesystem\Directory\ReadInterface;
+use Magento\Framework\Locale\Resolver as LocaleResolver;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Asset\Repository;
 use Magento\MediaStorage\Helper\File\Storage\Database;
 use Magento\Store\Model\ScopeInterface;
@@ -25,110 +20,58 @@ use Smile\Map\Model\Config\Backend\MarkerIcon;
 
 /**
  * Map helper.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 class Map extends AbstractHelper
 {
-    /**
-     * @var string
-     */
-    const MAP_CONFIG_XML_PATH = 'smile_map/map';
+    private const MAP_CONFIG_XML_PATH = 'smile_map/map';
+    private const SHARED_SETTINGS_NAME = 'all';
 
-    /**
-     * @var string
-     */
-    const SHARED_SETTINGS_NAME = 'all';
+    private ReadInterface $mediaDirectory;
 
-    /**
-     * @var \Magento\Framework\Locale\Resolver
-     */
-    private $localeResolver;
-
-    /**
-     * @var \Magento\MediaStorage\Helper\File\Storage\Database
-     */
-    private $fileStorageHelper;
-
-    /**
-     * @var \Magento\Framework\Filesystem
-     */
-    private $fileSystem;
-
-    /**
-     * @var \Magento\Framework\Filesystem\Directory\ReadInterface
-     */
-    private $mediaDirectory;
-
-    /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    private $assetRepository;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $storeManager;
-    
-    /**
-     * Map constructor.
-     *
-     * @param Context               $context           Application Context
-     * @param LocaleResolver        $localeResolver    Locale Resolver
-     * @param Database              $fileStorageHelper File Storage Helper
-     * @param Repository            $assetRepository   Asset Repository
-     * @param Filesystem            $fileSystem        File System
-     * @param StoreManagerInterface $storeManager      Store Manager
-     */
     public function __construct(
         Context $context,
-        LocaleResolver $localeResolver,
-        Database $fileStorageHelper,
-        Repository $assetRepository,
-        Filesystem $fileSystem,
-        StoreManagerInterface $storeManager
+        private LocaleResolver $localeResolver,
+        private Database $fileStorageHelper,
+        private Repository $assetRepository,
+        private Filesystem $fileSystem,
+        protected StoreManagerInterface $storeManager
     ) {
-        $this->localeResolver    = $localeResolver;
-        $this->fileStorageHelper = $fileStorageHelper;
-        $this->fileSystem        = $fileSystem;
-        $this->assetRepository   = $assetRepository;
-        $this->storeManager      = $storeManager;
+        $this->mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::MEDIA);
         parent::__construct($context);
     }
 
     /**
      * Returns currently configured map provider.
-     *
-     * @return string
      */
-    public function getProviderIdentifier()
+    public function getProviderIdentifier(): string
     {
         return $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH . '/provider');
     }
 
     /**
      * Returns map configuration by provider.
-     *
-     * @param string $providerIdentifier Provider identifier.
-     *
-     * @return mixed[]
      */
-    public function getProviderConfiguration($providerIdentifier)
+    public function getProviderConfiguration(string $providerIdentifier): array
     {
         $config = [];
 
-        $mapKeyFunc = function (&$value, $key) use (&$config, $providerIdentifier) {
-            if (strpos($key, 'provider_' . $providerIdentifier) === 0 || strpos($key, 'provider_' . self::SHARED_SETTINGS_NAME) === 0) {
-                $prefixes     = ['provider_' . $providerIdentifier . '_', 'provider_' . self::SHARED_SETTINGS_NAME . '_'];
-                $key          = str_replace($prefixes, '', $key);
+        $mapKeyFunc = function (&$value, $key) use (&$config, $providerIdentifier): void {
+            if (
+                str_starts_with($key, 'provider_' . $providerIdentifier)
+                || str_starts_with($key, 'provider_' . self::SHARED_SETTINGS_NAME)
+            ) {
+                $prefixes = ['provider_' . $providerIdentifier . '_', 'provider_' . self::SHARED_SETTINGS_NAME . '_'];
+                $key = str_replace($prefixes, '', $key);
                 $config[$key] = $value;
             }
         };
 
-        $allConfig = $this->scopeConfig->getValue(self::MAP_CONFIG_XML_PATH, 'store', $this->storeManager->getStore()->getCode());
-        
+        $allConfig = $this->scopeConfig->getValue(
+            self::MAP_CONFIG_XML_PATH,
+            'store',
+            $this->storeManager->getStore()->getCode()
+        );
+
         array_walk($allConfig, $mapKeyFunc);
 
         if (!isset($config['country'])) {
@@ -145,26 +88,22 @@ class Map extends AbstractHelper
     }
 
     /**
-     * Retrieve custom marker icon to use, if any. Otherwise returns default leaflet marker.
-     *
-     * @param array $config The Map configuration.
-     *
-     * @return string
+     * Retrieve custom marker icon to use, if any. Otherwise, returns default leaflet marker.
      */
-    private function getMarkerIcon($config)
+    private function getMarkerIcon(array $config): string
     {
         $folderName    = MarkerIcon::UPLOAD_DIR;
-        $storeLogoPath = isset($config['markerIcon']) ? $config['markerIcon'] : null;
+        $storeLogoPath = $config['markerIcon'] ?? null;
         $path          = $folderName . '/' . $storeLogoPath;
 
-        $logoUrl = $this->_urlBuilder->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
+        $logoUrl = $this->_urlBuilder->getBaseUrl(['_type' => UrlInterface::URL_TYPE_MEDIA]) . $path;
 
         try {
             $defaultFile = "Smile_Map::leaflet/images/marker-icon.png";
             $params      = ['_secure' => $this->_getRequest()->isSecure()];
             $url         = $this->assetRepository->getUrlWithParams($defaultFile, $params);
-        } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            $this->_logger->critical($e);
+        } catch (LocalizedException $e) {
+            $this->_logger->critical($e->getMessage());
             $url = $this->_urlBuilder->getUrl('', ['_direct' => 'core/index/notFound']);
         }
 
@@ -176,13 +115,9 @@ class Map extends AbstractHelper
     }
 
     /**
-     * If DB file storage is on - find there, otherwise - just file_exists
-     *
-     * @param string $filename relative path
-     *
-     * @return bool
+     * If DB file storage is on - find there, otherwise - just file_exists.
      */
-    private function isFile($filename)
+    private function isFile(string $filename): bool
     {
         if ($this->fileStorageHelper->checkDbUsage() && !$this->getMediaDirectory()->isFile($filename)) {
             $this->fileStorageHelper->saveFileToFilesystem($filename);
@@ -192,16 +127,10 @@ class Map extends AbstractHelper
     }
 
     /**
-     * Get media directory
-     *
-     * @return \Magento\Framework\Filesystem\Directory\Read
+     * Get media directory.
      */
-    private function getMediaDirectory()
+    private function getMediaDirectory(): ReadInterface
     {
-        if (!$this->mediaDirectory) {
-            $this->mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::MEDIA);
-        }
-
         return $this->mediaDirectory;
     }
 }

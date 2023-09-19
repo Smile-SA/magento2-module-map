@@ -1,131 +1,122 @@
 <?php
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
+declare(strict_types=1);
+
 namespace Smile\Map\Model;
 
-use Smile\Map\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Framework\Model\AbstractModel;
+use Smile\Map\Api\Data\AddressInterface;
 
 /**
  * Default implementation of the AddressInterface.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
 class Address extends AbstractModel implements AddressInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function getCountryId()
-    {
-        return $this->getData(self::COUNTRY_ID);
-    }
+    public const RETAILER_ID_FIELD = 'retailer_id';
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getRegion()
+    public function getRegion(): RegionInterface|string|null
     {
         return $this->getData(self::REGION);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getRegionId()
+    public function getRegionId(): ?int
     {
-        return $this->getData(self::REGION_ID);
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getStreet()
-    {
-        return is_array($this->getData(self::STREET)) ? $this->getData(self::STREET) : [$this->getData(self::STREET)];
+        return (int) $this->getData(self::REGION_ID);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getPostcode()
+    public function getCountryId(): ?string
+    {
+        return $this->getData(self::COUNTRY_ID);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getStreet(): array
+    {
+        return is_array($this->getData(self::STREET))
+            ? $this->getData(self::STREET)
+            : [$this->getData(self::STREET)];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPostcode(): ?string
     {
         return $this->getData(self::POSTCODE);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getCity()
+    public function getCity(): ?string
     {
         return $this->getData(self::CITY);
     }
 
     /**
-     * {@inheritDoc}
+     * Set retailer id.
      */
-    public function setRetailerId($retailerId)
+    public function setRetailerId(int $retailerId): self
     {
-        return $this->setData(self::RETAILER_ID, $retailerId);
+        return $this->setData(self::RETAILER_ID_FIELD, $retailerId);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setCountryId($countryId)
+    public function setCountryId(string $countryId): self
     {
         return $this->setData(self::COUNTRY_ID, $countryId);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setRegion($region = null)
+    public function setRegion(?string $region = null): self
     {
         return $this->setData(self::REGION, $region);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setRegionId($regionId)
+    public function setRegionId(int $regionId): self
     {
         return $this->setData(self::REGION_ID, $regionId);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setStreet($street)
+    public function setStreet(array|string $street): self
     {
         return $this->setData(self::STREET, $street);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setPostcode($postcode)
+    public function setPostcode(string $postcode): self
     {
         return $this->setData(self::POSTCODE, $postcode);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function setCity($city)
+    public function setCity(string $city): self
     {
         return $this->setData(self::CITY, $city);
     }

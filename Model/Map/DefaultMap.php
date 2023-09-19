@@ -1,99 +1,63 @@
 <?php
-/**
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade this module to newer
- * versions in the future.
- *
- * @category  Smile
- * @package   Smile\Map
- * @author    Aurelien FOUCRET <aurelien.foucret@smile.fr>
- * @copyright 2016 Smile
- * @license   Apache License Version 2.0
- */
+
+declare(strict_types=1);
+
 namespace Smile\Map\Model\Map;
 
-use \Smile\Map\Helper\Map as MapHelper;
+use Magento\Framework\DataObject;
 use Magento\Framework\Filter\FilterManager;
 use Smile\Map\Api\Data\GeoPointInterface;
+use Smile\Map\Api\MapInterface;
+use Smile\Map\Helper\Map as MapHelper;
 
 /**
  * Default implementation of the MapInterface.
- *
- * @category Smile
- * @package  Smile\Map
- * @author   Aurelien FOUCRET <aurelien.foucret@smile.fr>
  */
-class DefaultMap implements \Smile\Map\Api\MapInterface
+class DefaultMap implements MapInterface
 {
-    /**
-     * @var string
-     */
-    private $identifier;
+    private array $config;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var FilterManager
-     */
-    private $filterManager;
-
-    /**
-     * Constructor.
-     *
-     * @param string        $identifier    Map identifier.
-     * @param string        $name          Map provider name.
-     * @param MapHelper     $mapHelper     Map helper.
-     * @param FilterManager $filterManager Template filter manager.
-     */
-    public function __construct($identifier, $name, MapHelper $mapHelper, FilterManager $filterManager)
-    {
-        $this->identifier    = $identifier;
-        $this->name          = $name;
-        $this->config        = $mapHelper->getProviderConfiguration($identifier);
-        $this->filterManager = $filterManager;
+    public function __construct(
+        private string $identifier,
+        private string $name,
+        MapHelper $mapHelper,
+        private FilterManager $filterManager
+    ) {
+        $this->config = $mapHelper->getProviderConfiguration($identifier);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritdoc
      */
-    public function getDirectionUrl(GeoPointInterface $dest, GeoPointInterface $orig = null)
+    public function getDirectionUrl(GeoPointInterface $dest, ?GeoPointInterface $orig = null): string
     {
         $urlTemplate = $this->config['direction_url_template'];
 
-        $data = new \Magento\Framework\DataObject();
+        $data = new DataObject();
 
         $data->setDestLatitude($dest->getLatitude());
         $data->setDestLongitude($dest->getLongitude());
