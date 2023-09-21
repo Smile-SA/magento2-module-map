@@ -2,18 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.1.x] - 2023-04-24
-[2.1.x]: https://github.com/Smile-SA/magento2-module-map/compare/2.0.x...2.1.x
+## [2.1.0] - 2023-09-20
+[2.1.0]: https://github.com/Smile-SA/magento2-module-map/compare/2.0.4...2.1.0
 
 Dataset compatibility ES 2.11.x and PHP 8.2
 
-- fix Dynamic type declaration
-- fix Type hinting
+- Fix Dynamic type declaration
+- Fix Type hinting
 - Replace `Zend_Date` by `DateTime`
 - Remove `MutationObserver` support
-- fix UI Component Retailer Offer editing
+- Fix UI Component Retailer Offer editing
 - Replace `Zend_Validate` by `Laminas\Validator`
-- fix Retailer Grid Column Action
-- fix Retailer Grid Mass Actions
-- fix some translations
-- remove Temando/Shipping Plugin
+- Fix Retailer Grid Column Action
+- Fix Retailer Grid Mass Actions
+- Fix some translations
+- Remove Temando/Shipping Plugin
