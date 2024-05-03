@@ -162,6 +162,11 @@ define([
 
                 geocoder.currentResult.subscribe(this.currentResultSubscribed.bind(this));
             }.bind(this));
+
+            // geolocalize after url redirect : we bet that according to url parts, the user has clicked on geolocalize
+            if (navigator.geolocation && window.location.search === '' && window.location.hash.length > 1) {
+                this.geolocalize();
+            }
         },
 
         /**
