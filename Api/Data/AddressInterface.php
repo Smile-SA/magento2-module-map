@@ -22,7 +22,7 @@ interface AddressInterface
     /**
      * Get region.
      *
-     * @return RegionInterface|string|null
+     * @return \Magento\Customer\Api\Data\RegionInterface|string|null
      */
     public function getRegion(): RegionInterface|string|null;
 
@@ -43,7 +43,7 @@ interface AddressInterface
     /**
      * Get street.
      *
-     * @return array
+     * @return string[]
      */
     public function getStreet(): array;
 
