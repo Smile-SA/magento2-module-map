@@ -2,16 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## WIP
+## [2.1.3] - 2026-06-03
+[2.1.3]: https://github.com/Smile-SA/magento2-module-map/compare/2.1.2...2.1.3
 
 - Remove dependency to unused jQuery UI components
 
-## ## [2.1.2] - 2024-08-29
+## [2.1.2] - 2024-08-29
 [2.1.2]: https://github.com/Smile-SA/magento2-module-map/compare/2.1.1...2.1.2
 
 - API model docblocks
 
-## ## [2.1.1] - 2024-05-03
+## [2.1.1] - 2024-05-03
 [2.1.1]: https://github.com/Smile-SA/magento2-module-map/compare/2.1.0...2.1.1
 
 - Fix geolocalize through header button
