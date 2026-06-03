@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## WIP
+
+- Remove dependency to unused jQuery UI components
+
 ## ## [2.1.2] - 2024-08-29
 [2.1.2]: https://github.com/Smile-SA/magento2-module-map/compare/2.1.1...2.1.2
 

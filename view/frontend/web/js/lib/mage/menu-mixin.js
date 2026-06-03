@@ -1,6 +1,6 @@
 define([
     'jquery',
-    'jquery/ui'
+    'jquery-ui-modules/menu'
 ], function ($) {
     'use strict';
 
