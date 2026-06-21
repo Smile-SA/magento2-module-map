@@ -5,6 +5,5 @@
         <!-- Add conditional load css when use markercluser mode -->
         <css src="Smile_Map::leaflet/plugins/markercluster/MarkerCluster.css"/>
         <css src="Smile_Map::leaflet/plugins/markercluster/MarkerCluster.Default.css"/>
-        <script src="Smile_Map::js/polyfill/ie11/promise.min.js" ie_condition="IE 11"/>
     </head>
 </page>
