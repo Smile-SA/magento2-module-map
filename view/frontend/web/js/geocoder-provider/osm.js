@@ -6,11 +6,14 @@ define([
 
     const BASE_API_URL = '//nominatim.openstreetmap.org';
 
-    function getServiceUrl(qry) {
+    function getServiceUrl(qry, options) {
+        options['countrycodes'] = options['countrycodes'] || 'FR';
         var parameters = L.Util.extend({
             q: qry,
-            format: 'json'
-        }, this.options);
+            format: 'json',
+        }, options);
+
+        this.options = options;
 
         return 'https:'
             + '//nominatim.openstreetmap.org/search'
@@ -39,7 +42,7 @@ define([
      * @param callback  potential callback to call on results
      */
     Geocoder.prototype.geocode = function (queryText, options, callback) {
-        var queryUrl = getServiceUrl(queryText);
+        var queryUrl = getServiceUrl(queryText, options);
         $.getJSON(queryUrl, function(results) {
             results = results.map(this.prepareResult);
             callback(results);
