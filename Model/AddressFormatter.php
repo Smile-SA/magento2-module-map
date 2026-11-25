@@ -100,7 +100,7 @@ class AddressFormatter
      *
      * @throws NoSuchEntityException
      */
-    private function getCountryFullName(string $countryId): mixed
+    private function getCountryFullName(string $countryId)
     {
         $store = $this->storeManager->getStore();
         $storeLocale = $this->scopeConfig->getValue(
