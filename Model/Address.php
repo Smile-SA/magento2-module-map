@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Smile\Map\Model;
 
-use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Framework\Model\AbstractModel;
 use Smile\Map\Api\Data\AddressInterface;
 
@@ -18,7 +17,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * @inheritdoc
      */
-    public function getRegion(): RegionInterface|string|null
+    public function getRegion()
     {
         return $this->getData(self::REGION);
     }
@@ -100,7 +99,7 @@ class Address extends AbstractModel implements AddressInterface
     /**
      * @inheritdoc
      */
-    public function setStreet(array|string $street): self
+    public function setStreet($street): self
     {
         return $this->setData(self::STREET, $street);
     }

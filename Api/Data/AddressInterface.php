@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Smile\Map\Api\Data;
 
-use Magento\Customer\Api\Data\RegionInterface;
-
 /**
  * Address interface definition.
  * Method's return type must be specified using return annotation
@@ -24,7 +22,7 @@ interface AddressInterface
      *
      * @return \Magento\Customer\Api\Data\RegionInterface|string|null
      */
-    public function getRegion(): RegionInterface|string|null;
+    public function getRegion();
 
     /**
      * Get region ID.
@@ -91,7 +89,7 @@ interface AddressInterface
      * @param string[]|string $street Street.
      * @return $this
      */
-    public function setStreet(array|string $street): self;
+    public function setStreet($street): self;
 
     /**
      * Set postcode.
